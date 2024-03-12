@@ -6,6 +6,7 @@ import User from "../models/User.js";
 
 const secret = process.env.SECRET;
 const expTime = process.env.EXPIRATION_TIME;
+const saltRounds = 10;
 
 export const signUp = asyncHandler(async (req, res, next) => {
   const {
@@ -32,17 +33,20 @@ export const signUp = asyncHandler(async (req, res, next) => {
     });
   }
 
-  const hashPassword = await bcrypt.hash(password, 10);
+  const hashPassword = await bcrypt.hash(password, saltRounds);
+
   const { _id } = await User.create({
     username,
     email,
-    password: hashPassword,
+    passwordObj: {
+      password: hashPassword,
+      lastPasswordUpdate: new Date(),
+    },
+    lastLogin: new Date(),
     ...rest,
   });
 
-  const token = jwt.sign({ _id }, secret, {
-    expiresIn: expTime,
-  });
+  const token = jwt.sign({ _id }, secret, { expiresIn: expTime });
   res.status(201).json({ token, message: "Registrierung erfolgreich." });
 });
 
@@ -51,8 +55,7 @@ export const signIn = asyncHandler(async (req, res, next) => {
     body: { email, password },
   } = req;
 
-  const user = await User.findOne({ email }).select("+password");
-  console.log(user);
+  const user = await User.findOne({ email });
   if (!user) {
     throw new ErrorResponse({
       message: "Es ist kein User mit dieser E-Mail registriert.",
@@ -62,7 +65,11 @@ export const signIn = asyncHandler(async (req, res, next) => {
     });
   }
 
-  const verifyPassword = await bcrypt.compare(password, user.password);
+  const verifyPassword = await bcrypt.compare(
+    password,
+    user.passwordObj.password,
+  );
+
   if (!verifyPassword) {
     throw new ErrorResponse({
       message: "Falsches Passwort.",
@@ -72,6 +79,88 @@ export const signIn = asyncHandler(async (req, res, next) => {
     });
   }
 
+  user.lastLogin = new Date();
+  await user.save({ timestamps: false });
+
   const token = jwt.sign({ _id: user._id }, secret, { expiresIn: expTime });
   res.status(201).json({ token, message: "Anmeldung erfolgreich" });
+});
+
+export const getUser = asyncHandler(async (req, res, next) => {
+  const { userID } = req;
+
+  const user = await User.findById(userID).select("-passwordObj.password");
+  if (!user) {
+    throw new ErrorResponse({
+      message: "User nicht gefunden.",
+      statusCode: 404,
+      errorType: "Not Found",
+      errorCode: "USER_CONTROLLER_006",
+    });
+  }
+
+  res.status(200).json(user);
+});
+
+export const editUser = asyncHandler(async (req, res, next) => {
+  const { userID } = req;
+  const { username, email, password } = req.body;
+
+  const emptyBody = Object.keys(req.body).length === 0;
+  if (emptyBody) {
+    throw new ErrorResponse({
+      message: "Keine Daten empfangen.",
+      statusCode: 400,
+      errorType: "No Data",
+      errorCode: "USER_CONTROLLER_007",
+    });
+  }
+
+  const user = await User.findById(userID);
+  console.log(user);
+  if (!user) {
+    throw new ErrorResponse({
+      message: "User nicht gefunden.",
+      statusCode: 404,
+      errorType: "Not Found",
+      errorCode: "USER_CONTROLLER_008",
+    });
+  }
+
+  if (username) {
+    const usernameAlreadyExists = await User.findOne({ username });
+    if (usernameAlreadyExists && usernameAlreadyExists._id != userID) {
+      throw new ErrorResponse({
+        message: "Benutzername existiert bereits.",
+        statusCode: 403,
+        errorType: "Validation Error",
+        errorCode: "USER_CONTROLLER_009",
+      });
+    }
+    user.username = username;
+  }
+
+  if (email) {
+    const emailAlreadyExists = await User.findOne({ email });
+    if (emailAlreadyExists && emailAlreadyExists._id != userID) {
+      throw new ErrorResponse({
+        message: "E-Mail existiert bereits.",
+        statusCode: 403,
+        errorType: "Validation Error",
+        errorCode: "USER_CONTROLLER_010",
+      });
+    }
+    user.email = email;
+  }
+
+  if (password) {
+    const hashPassword = await bcrypt.hash(password, saltRounds);
+    user.passwordObj.password = hashPassword;
+    user.passwordObj.lastPasswordUpdate = new Date();
+  }
+
+  await user.save();
+
+  const token = jwt.sign({ _id: userID }, secret, { expiresIn: expTime });
+  res.status(200).json({ token, message: "Benutzer erfolgreich aktualisiert" });
 });
