@@ -164,3 +164,21 @@ export const editUser = asyncHandler(async (req, res, next) => {
   const token = jwt.sign({ _id: userID }, secret, { expiresIn: expTime });
   res.status(200).json({ token, message: "Benutzer erfolgreich aktualisiert" });
 });
+
+export const deleteUser = asyncHandler(async (req, res, next) => {
+  const { userID } = req;
+
+  const user = await User.findById(userID);
+  if (!user) {
+    throw new ErrorResponse({
+      message: "User nicht gefunden.",
+      statusCode: 404,
+      errorType: "Not Found",
+      errorCode: "USER_CONTROLLER_011",
+    });
+  }
+
+  await user.deleteOne();
+
+  res.status(200).json({ message: "User erfolgreich gelöscht." });
+});

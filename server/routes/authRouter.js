@@ -5,6 +5,7 @@ import {
   signIn,
   getUser,
   editUser,
+  deleteUser,
 } from "../controllers/userController.js";
 
 export const authRouter = Router();
@@ -14,3 +15,4 @@ authRouter.post("/signin", signIn);
 
 authRouter.get("/me", verifyToken, getUser);
 authRouter.put("/me", verifyToken, editUser);
+authRouter.delete("/me", verifyToken, deleteUser);
