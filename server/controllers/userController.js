@@ -18,8 +18,9 @@ export const signUp = asyncHandler(async (req, res, next) => {
     throw new ErrorResponse({
       message: "Benutzername existiert bereits.",
       statusCode: 403,
-      errorType: "Validation Error",
-      errorCode: "USER_CONTROLLER_001",
+      statusMessage: "Forbidden",
+      errorType: "ConflictError",
+      errorCode: "USER_CONFLICT_001",
     });
   }
 
@@ -28,8 +29,9 @@ export const signUp = asyncHandler(async (req, res, next) => {
     throw new ErrorResponse({
       message: "E-Mail existiert bereits.",
       statusCode: 403,
-      errorType: "Validation Error",
-      errorCode: "USER_CONTROLLER_002",
+      statusMessage: "Forbidden",
+      errorType: "ConflictError",
+      errorCode: "USER_CONFLICT_002",
     });
   }
 
@@ -58,10 +60,11 @@ export const signIn = asyncHandler(async (req, res, next) => {
   const user = await User.findOne({ email });
   if (!user) {
     throw new ErrorResponse({
-      message: "Es ist kein User mit dieser E-Mail registriert.",
+      message: "Es ist kein Benutzer mit dieser E-Mail registriert.",
       statusCode: 404,
-      errorType: "Not Found",
-      errorCode: "USER_CONTROLLER_003",
+      statusMessage: "Not Found",
+      errorType: "NotFoundError",
+      errorCode: "USER_NOTFOUND_001",
     });
   }
 
@@ -69,13 +72,13 @@ export const signIn = asyncHandler(async (req, res, next) => {
     password,
     user.passwordObj.password,
   );
-
   if (!verifyPassword) {
     throw new ErrorResponse({
       message: "Falsches Passwort.",
       statusCode: 401,
-      errorType: "Unauthorized",
-      errorCode: "USER_CONTROLLER_004",
+      statusMessage: "Unauthorized",
+      errorType: "AuthenticationError",
+      errorCode: "USER_LOGIN_001",
     });
   }
 
@@ -92,10 +95,11 @@ export const getUser = asyncHandler(async (req, res, next) => {
   const user = await User.findById(userID).select("-passwordObj.password");
   if (!user) {
     throw new ErrorResponse({
-      message: "User nicht gefunden.",
+      message: "Benutzer existiert nicht.",
       statusCode: 404,
-      errorType: "Not Found",
-      errorCode: "USER_CONTROLLER_006",
+      statusMessage: "Not Found",
+      errorType: "NotFoundError",
+      errorCode: "USER_NOTFOUND_002",
     });
   }
 
@@ -109,21 +113,22 @@ export const editUser = asyncHandler(async (req, res, next) => {
   const emptyBody = Object.keys(req.body).length === 0;
   if (emptyBody) {
     throw new ErrorResponse({
-      message: "Keine Daten empfangen.",
+      message: "Keine Daten übermittelt.",
       statusCode: 400,
-      errorType: "No Data",
-      errorCode: "USER_CONTROLLER_007",
+      statusMessage: "Bad Request",
+      errorType: "BadRequestError",
+      errorCode: "USER_DATA_VALIDATION_001",
     });
   }
 
   const user = await User.findById(userID);
-  console.log(user);
   if (!user) {
     throw new ErrorResponse({
-      message: "User nicht gefunden.",
+      message: "Benutzer existiert nicht.",
       statusCode: 404,
-      errorType: "Not Found",
-      errorCode: "USER_CONTROLLER_008",
+      statusMessage: "Not Found",
+      errorType: "NotFoundError",
+      errorCode: "USER_NOTFOUND_002",
     });
   }
 
@@ -132,9 +137,10 @@ export const editUser = asyncHandler(async (req, res, next) => {
     if (usernameAlreadyExists && usernameAlreadyExists._id != userID) {
       throw new ErrorResponse({
         message: "Benutzername existiert bereits.",
-        statusCode: 403,
-        errorType: "Validation Error",
-        errorCode: "USER_CONTROLLER_009",
+        statusCode: 409,
+        statusMessage: "Conflict",
+        errorType: "ConflictError",
+        errorCode: "USER_CONFLICT_001",
       });
     }
     user.username = username;
@@ -145,9 +151,10 @@ export const editUser = asyncHandler(async (req, res, next) => {
     if (emailAlreadyExists && emailAlreadyExists._id != userID) {
       throw new ErrorResponse({
         message: "E-Mail existiert bereits.",
-        statusCode: 403,
-        errorType: "Validation Error",
-        errorCode: "USER_CONTROLLER_010",
+        statusCode: 409,
+        statusMessage: "Conflict",
+        errorType: "ConflictError",
+        errorCode: "USER_CONFLICT_002",
       });
     }
     user.email = email;
@@ -171,10 +178,11 @@ export const deleteUser = asyncHandler(async (req, res, next) => {
   const user = await User.findById(userID);
   if (!user) {
     throw new ErrorResponse({
-      message: "User nicht gefunden.",
+      message: "Benutzer existiert nicht.",
       statusCode: 404,
-      errorType: "Not Found",
-      errorCode: "USER_CONTROLLER_011",
+      statusMessage: "Not Found",
+      errorType: "NotFoundError",
+      errorCode: "USER_NOTFOUND_002",
     });
   }
 

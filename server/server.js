@@ -3,6 +3,7 @@ import cors from "cors";
 import { errorHandler } from "./middlewares/errorHandler.js";
 import { connectToDB } from "./db/index.js";
 import { authRouter } from "./routes/authRouter.js";
+import { shoppingListRouter } from "./routes/shoppingListRouter.js";
 
 const app = express();
 const PORT = 8080 || process.env.PORT;
@@ -12,7 +13,7 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true })); // extended: true to get rid of body-parser error
 
-app.use("/auth", authRouter);
+app.use("/auth", authRouter, shoppingListRouter);
 app.use("*", (req, res) => res.sendStatus(404));
 
 app.use(errorHandler);
