@@ -11,8 +11,9 @@ export const connectToDB = async () => {
     throw new ErrorResponse({
       message: "Fehler bei der Verbindung zur Datenbank.",
       statusCode: 500,
-      errorType: "DatabaseError",
-      errorCode: "DB_001",
+      statusMessage: "Internal Server Error",
+      errorType: "DependencyError",
+      errorCode: "SYS_DATABASE_001",
     });
   }
 };
