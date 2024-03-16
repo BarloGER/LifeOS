@@ -1,5 +1,7 @@
 import { Router } from "express";
+import { validateJoi } from "../middlewares/validateJoi.js";
 import { verifyToken } from "../middlewares/verifyToken.js";
+import { userSchema } from "../joi/userSchema.js";
 import {
   signUp,
   signIn,
@@ -10,7 +12,7 @@ import {
 
 export const authRouter = Router();
 
-authRouter.post("/signup", signUp);
+authRouter.post("/signup", validateJoi(userSchema), signUp);
 authRouter.post("/signin", signIn);
 
 authRouter.get("/me", verifyToken, getUser);
