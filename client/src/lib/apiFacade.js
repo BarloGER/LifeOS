@@ -1,7 +1,7 @@
 import {
+  signUp,
+  signIn,
   getUser,
-  loginUser,
-  registerUser,
   editUser,
   deleteUser,
 } from "../features/authentication";
@@ -10,9 +10,9 @@ import { getAllShoppingLists } from "../features/shopping-list/services/shopping
 
 const api = {
   // User-methods
+  signUp: (credentials) => signUp(credentials),
+  signIn: (credentials) => signIn(credentials),
   getUser: (token) => getUser(token),
-  loginUser: (credentials) => loginUser(credentials),
-  registerUser: (credentials) => registerUser(credentials),
   editUser: (updatedData, token) => editUser(updatedData, token),
   deleteUser: (token) => deleteUser(token),
 
