@@ -2,10 +2,10 @@ import PropTypes from "prop-types";
 import { useState } from "react";
 import { Navigate } from "react-router-dom";
 import { SignUpForm } from "../features/authentication";
-import api from "../lib/apiFacade";
+import { api } from "../lib/apiFacade";
 import "../features/authentication/assets/auth-forms.css";
 
-const SignUp = ({
+export const SignUp = ({
   isAuthenticated,
   setIsAuthenticated,
   loadingAuthRequest,
@@ -78,5 +78,3 @@ SignUp.propTypes = {
   setLoadingAuthRequest: PropTypes.func.isRequired,
   setToken: PropTypes.func.isRequired,
 };
-
-export default SignUp;

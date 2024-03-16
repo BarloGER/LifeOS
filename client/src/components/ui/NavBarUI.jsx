@@ -2,7 +2,7 @@ import PropTypes from "prop-types";
 import { NavLink } from "react-router-dom";
 import { MdMenu, MdClose } from "react-icons/md";
 
-const NavBarUI = ({ toggleHamburger, isClicked }) => {
+export const NavBarUI = ({ toggleHamburger, isClicked }) => {
   return (
     <nav className="navbar">
       <div className="hamburger">
@@ -25,5 +25,3 @@ NavBarUI.propTypes = {
   toggleHamburger: PropTypes.func.isRequired,
   isClicked: PropTypes.bool.isRequired,
 };
-
-export default NavBarUI;

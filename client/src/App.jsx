@@ -7,15 +7,15 @@ import {
 
 import { useAuth } from "./features/authentication";
 
-import GlobalLayout from "./layouts/GlobalLayout";
+import { GlobalLayout } from "./layouts/GlobalLayout";
 import { ProtectedRoutes } from "./features/authentication";
 
-import SignIn from "./pages/SignIn";
-import SignUp from "./pages/SignUp";
-import Dashboard from "./pages/Dashboard";
-import ShoppingListDetails from "./features/shopping-list/components/ShoppingListDetails";
+import { SignIn } from "./pages/SignIn";
+import { SignUp } from "./pages/SignUp";
+import { Dashboard } from "./pages/Dashboard";
+import { ShoppingLists } from "./pages/ShoppingLists";
 
-const App = () => {
+export const App = () => {
   const {
     setToken,
     isAuthenticated,
@@ -61,15 +61,10 @@ const App = () => {
           }
         >
           <Route path="dashboard" element={<Dashboard />} />
-          <Route
-            path="shopping-lists/:listId"
-            element={<ShoppingListDetails />}
-          />
+          <Route path="shopping-lists" element={<ShoppingLists />} />
         </Route>
       </Route>
     )
   );
   return <RouterProvider router={router} />;
 };
-
-export default App;

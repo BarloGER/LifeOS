@@ -8,7 +8,7 @@ import {
 
 import { getAllShoppingLists } from "../features/shopping-list/services/shoppingListFetches";
 
-const api = {
+export const api = {
   // User-methods
   signUp: (credentials) => signUp(credentials),
   signIn: (credentials) => signIn(credentials),
@@ -19,5 +19,3 @@ const api = {
   //Shopping List methods
   getAllShoppingLists: (token) => getAllShoppingLists(token),
 };
-
-export default api;

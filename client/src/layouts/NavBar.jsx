@@ -1,9 +1,9 @@
 import { useState } from "react";
-import NavBarUI from "../components/ui/NavBarUI";
-import NavBarSideMenu from "../components/ui/NavBarSideMenu";
+import { NavBarUI } from "../components/ui/NavBarUI";
+import { NavBarSideMenu } from "../components/ui/NavBarSideMenu";
 import "../assets/navbar.css";
 
-const NavBar = () => {
+export const NavBar = () => {
   const [isClicked, setIsClicked] = useState(false);
 
   const toggleHamburger = () => {
@@ -13,9 +13,7 @@ const NavBar = () => {
   return (
     <>
       <NavBarUI toggleHamburger={toggleHamburger} isClicked={isClicked} />
-      <NavBarSideMenu isClicked={isClicked} />
+      <NavBarSideMenu toggleHamburger={toggleHamburger} isClicked={isClicked} />
     </>
   );
 };
-
-export default NavBar;
