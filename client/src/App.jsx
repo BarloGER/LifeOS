@@ -14,6 +14,7 @@ import { SignIn } from "./pages/SignIn";
 import { SignUp } from "./pages/SignUp";
 import { Dashboard } from "./pages/Dashboard";
 import { ShoppingLists } from "./pages/ShoppingLists";
+import { ShoppingListDetails } from "./features/shopping-lists/components/ShoppingListDetails";
 
 export const App = () => {
   const {
@@ -22,11 +23,15 @@ export const App = () => {
     setIsAuthenticated,
     loadingAuthRequest,
     setLoadingAuthRequest,
+    user,
   } = useAuth();
 
   const router = createBrowserRouter(
     createRoutesFromElements(
-      <Route path="/" element={<GlobalLayout />}>
+      <Route
+        path="/"
+        element={<GlobalLayout isAuthenticated={isAuthenticated} />}
+      >
         <Route
           index
           element={
@@ -50,21 +55,23 @@ export const App = () => {
             />
           }
         />
-
         <Route
           path="/auth"
-          element={
-            <ProtectedRoutes
-              isAuthenticated={isAuthenticated}
-              loadingAuthRequest={loadingAuthRequest}
-            />
-          }
+          element={<ProtectedRoutes isAuthenticated={isAuthenticated} />}
         >
           <Route path="dashboard" element={<Dashboard />} />
-          <Route path="shopping-lists" element={<ShoppingLists />} />
+          <Route
+            path="shopping-lists"
+            element={<ShoppingLists user={user} />}
+          />
+          <Route
+            path="shopping-lists/:shoppingListID"
+            element={<ShoppingListDetails />}
+          />
         </Route>
       </Route>
     )
   );
+
   return <RouterProvider router={router} />;
 };
