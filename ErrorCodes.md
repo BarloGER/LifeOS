@@ -11,7 +11,7 @@
 
 ### RESOURCE (`SHOPPING_LIST`)
 
-- **SHOPPING_LIST_NOTFOUND_001**: Diese Einkaufsliste existiert nicht.
+- **SHOPPING_LIST_NOTFOUND_002**: Diese Einkaufsliste existiert nicht.
 - **SHOPPING_LIST_PERMISSION_001**: Du kannst nur Einkaufslisten editieren, die du erstellt hast, oder zu denen du eingeladen wurdest.
 - **SHOPPING_LIST_PERMISSION_002**: Du kannst nur Listen löschen, die du erstellt hast.
 
