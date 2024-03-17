@@ -6,7 +6,10 @@ import {
   deleteUser,
 } from "../features/authentication";
 
-import { getAllShoppingLists } from "../features/shopping-list/services/shoppingListFetches";
+import {
+  getAllShoppingLists,
+  getSingleShoppingList,
+} from "../features/shopping-lists";
 
 export const api = {
   // User-methods
@@ -18,4 +21,6 @@ export const api = {
 
   //Shopping List methods
   getAllShoppingLists: (token) => getAllShoppingLists(token),
+  getSingleShoppingList: (token, shoppingListID) =>
+    getSingleShoppingList(token, shoppingListID),
 };
