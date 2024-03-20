@@ -1,7 +1,17 @@
-import { Outlet } from "react-router-dom";
-import NavBar from "./NavBar";
+import PropTypes from "prop-types";
+import { useEffect } from "react";
+import { Outlet, useLocation } from "react-router-dom";
+import { NavBar } from "./NavBar";
 
-const GlobalLayout = () => {
+export const GlobalLayout = ({ isAuthenticated }) => {
+  const location = useLocation();
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      localStorage.setItem("lastPath", location.pathname);
+    }
+  }, [location, isAuthenticated]);
+
   return (
     <>
       <NavBar />
@@ -10,4 +20,6 @@ const GlobalLayout = () => {
   );
 };
 
-export default GlobalLayout;
+GlobalLayout.propTypes = {
+  isAuthenticated: PropTypes.bool.isRequired,
+};

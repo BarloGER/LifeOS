@@ -22,4 +22,18 @@ export const userSchema = Joi.object({
       "string.max": "Das Passwort darf höchstens {#limit} Zeichen lang sein",
       "string.empty": "Das Passwort muss angegeben werden",
     }),
+  friends: Joi.array()
+    .items(
+      Joi.object({
+        friendID: Joi.string().required(),
+        friendUsername: Joi.string().required(),
+      }),
+    )
+    .optional(),
+  friendRequestFrom: Joi.array().items(
+    Joi.object({
+      friendID: Joi.string().required(),
+      friendUsername: Joi.string().required(),
+    }),
+  ),
 });

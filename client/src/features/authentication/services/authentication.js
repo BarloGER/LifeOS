@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
-import api from "../../../lib/apiFacade";
+import { api } from "../../../lib/apiFacade";
 
 export const useAuth = () => {
   const [token, setToken] = useState(localStorage.getItem("token"));
-  const [loadingAuthRequest, setLoadingAuthRequest] = useState(true);
+  const [loadingAuthRequest, setLoadingAuthRequest] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [user, setUser] = useState(null);
 

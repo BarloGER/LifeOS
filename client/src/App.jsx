@@ -7,26 +7,31 @@ import {
 
 import { useAuth } from "./features/authentication";
 
-import GlobalLayout from "./layouts/GlobalLayout";
+import { GlobalLayout } from "./layouts/GlobalLayout";
 import { ProtectedRoutes } from "./features/authentication";
 
-import SignIn from "./pages/SignIn";
-import SignUp from "./pages/SignUp";
-import Dashboard from "./pages/Dashboard";
-import ShoppingListDetails from "./features/shopping-list/components/ShoppingListDetails";
+import { SignIn } from "./pages/SignIn";
+import { SignUp } from "./pages/SignUp";
+import { Dashboard } from "./pages/Dashboard";
+import { ShoppingLists } from "./pages/ShoppingLists";
+import { ShoppingListDetails } from "./features/shopping-lists/components/ShoppingListDetails";
 
-const App = () => {
+export const App = () => {
   const {
     setToken,
     isAuthenticated,
     setIsAuthenticated,
     loadingAuthRequest,
     setLoadingAuthRequest,
+    user,
   } = useAuth();
 
   const router = createBrowserRouter(
     createRoutesFromElements(
-      <Route path="/" element={<GlobalLayout />}>
+      <Route
+        path="/"
+        element={<GlobalLayout isAuthenticated={isAuthenticated} />}
+      >
         <Route
           index
           element={
@@ -50,26 +55,23 @@ const App = () => {
             />
           }
         />
-
         <Route
           path="/auth"
-          element={
-            <ProtectedRoutes
-              isAuthenticated={isAuthenticated}
-              loadingAuthRequest={loadingAuthRequest}
-            />
-          }
+          element={<ProtectedRoutes isAuthenticated={isAuthenticated} />}
         >
           <Route path="dashboard" element={<Dashboard />} />
           <Route
-            path="shopping-lists/:listId"
+            path="shopping-lists"
+            element={<ShoppingLists user={user} />}
+          />
+          <Route
+            path="shopping-lists/:shoppingListID"
             element={<ShoppingListDetails />}
           />
         </Route>
       </Route>
     )
   );
+
   return <RouterProvider router={router} />;
 };
-
-export default App;

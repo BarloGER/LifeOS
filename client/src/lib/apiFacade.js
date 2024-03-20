@@ -6,9 +6,12 @@ import {
   deleteUser,
 } from "../features/authentication";
 
-import { getAllShoppingLists } from "../features/shopping-list/services/shoppingListFetches";
+import {
+  getAllShoppingLists,
+  getSingleShoppingList,
+} from "../features/shopping-lists";
 
-const api = {
+export const api = {
   // User-methods
   signUp: (credentials) => signUp(credentials),
   signIn: (credentials) => signIn(credentials),
@@ -18,6 +21,6 @@ const api = {
 
   //Shopping List methods
   getAllShoppingLists: (token) => getAllShoppingLists(token),
+  getSingleShoppingList: (token, shoppingListID) =>
+    getSingleShoppingList(token, shoppingListID),
 };
-
-export default api;

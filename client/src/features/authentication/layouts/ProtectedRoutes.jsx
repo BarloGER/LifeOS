@@ -1,22 +1,21 @@
 import PropTypes from "prop-types";
 import { useEffect } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
+import { LoadingScreen } from "../../../components/ui/LoadingSceen";
 
-export const ProtectedRoutes = ({ isAuthenticated, loadingAuthRequest }) => {
+export const ProtectedRoutes = ({ isAuthenticated }) => {
   const navigate = useNavigate();
+  const token = localStorage.getItem("token");
 
   useEffect(() => {
-    if (!loadingAuthRequest && !isAuthenticated) {
+    if (!token) {
       navigate("/");
     }
-  }, [isAuthenticated, loadingAuthRequest, navigate]);
+  }, [token, navigate]);
 
-  return isAuthenticated ? <Outlet /> : <h1>Loading...</h1>;
+  return isAuthenticated ? <Outlet /> : <LoadingScreen />;
 };
 
 ProtectedRoutes.propTypes = {
   isAuthenticated: PropTypes.bool.isRequired,
-  loadingAuthRequest: PropTypes.bool.isRequired,
 };
-
-export default ProtectedRoutes;

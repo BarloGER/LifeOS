@@ -2,6 +2,20 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import { ErrorResponse } from "../utils/ErrorResponse.js";
 import ShoppingList from "../models/ShoppingList.js";
 
+export const createShoppingList = asyncHandler(async (req, res, next) => {
+  const { userID } = req;
+  const { name, items, sharedWith } = req.body;
+
+  await ShoppingList.create({
+    ownerID: userID,
+    name,
+    items,
+    sharedWith,
+  });
+
+  res.status(201).json({ message: "Einkaufsliste erfolgreich erstellt." });
+});
+
 export const getAllShoppingLists = asyncHandler(async (req, res, next) => {
   const { userID } = req;
 
@@ -15,18 +29,24 @@ export const getAllShoppingLists = asyncHandler(async (req, res, next) => {
   });
 });
 
-export const createShoppingList = asyncHandler(async (req, res, next) => {
-  const { userID } = req;
-  const { name, items, sharedWith } = req.body;
+export const getSingleShoppingList = asyncHandler(async (req, res, next) => {
+  const { shoppingListID } = req.params;
 
-  await ShoppingList.create({
-    ownerID: userID,
-    name,
-    items,
-    sharedWith,
+  const shoppingList = await ShoppingList.findById(shoppingListID);
+  if (!shoppingList) {
+    return next(
+      new ErrorResponse({
+        message: "Diese Einkaufsliste existiert nicht.",
+        statusCode: 404,
+        errorType: "Not Found",
+        errorCode: "SHOPPING_LIST_NOTFOUND_002",
+      }),
+    );
+  }
+
+  res.status(200).json({
+    shoppingList,
   });
-
-  res.status(201).json({ message: "Einkaufsliste erfolgreich erstellt." });
 });
 
 export const editShoppingList = asyncHandler(async (req, res, next) => {

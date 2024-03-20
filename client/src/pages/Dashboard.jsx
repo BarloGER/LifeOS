@@ -1,6 +1,6 @@
 import "../assets/dashboard.css";
 
-const Dashboard = () => {
+export const Dashboard = () => {
   return (
     <section className="dashboard-container">
       <div>
@@ -9,5 +9,3 @@ const Dashboard = () => {
     </section>
   );
 };
-
-export default Dashboard;

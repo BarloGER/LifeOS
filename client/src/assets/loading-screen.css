@@ -1,0 +1,33 @@
+.loading-screen {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  background-color: var(--background-color);
+}
+
+.loading-screen .loader {
+  width: 5rem;
+  height: 5rem;
+  border: 3px solid var(--text-color);
+  border-bottom-color: var(--success-color);
+  border-radius: 50%;
+  display: inline-block;
+  box-sizing: border-box;
+  animation: rotation 1s linear infinite;
+}
+
+.loading-screen .text {
+  color: var(--text-color);
+}
+
+@keyframes rotation {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
