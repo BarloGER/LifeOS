@@ -1,17 +1,25 @@
 import { Schema, model } from "mongoose";
 
+const itemSchema = new Schema({
+  name: { type: String, required: true },
+  quantity: { type: Number, required: true },
+  unit: { type: String, required: true },
+});
+
+const friendSchema = new Schema(
+  {
+    friendID: { type: String, required: true },
+    friendUsername: { type: String, required: true },
+  },
+  { _id: false },
+);
+
 const shoppingListSchema = new Schema(
   {
     ownerID: { type: String, required: true },
     name: { type: String, required: true },
-    items: [
-      {
-        name: { type: String, required: true },
-        quantity: { type: Number, required: true },
-        unit: { type: String, required: false },
-      },
-    ],
-    sharedWith: [String],
+    items: [itemSchema],
+    sharedWith: [friendSchema],
   },
   { timestamps: true },
 );
