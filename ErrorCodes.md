@@ -9,6 +9,15 @@
 - **USER_TOKEN_001**: Bitte zuerst einloggen.
 - **USER_TOKEN_002**: Ungültiger Token.
 
+### RESOURCE (`FRIEND`)
+
+- **FRIEND_CONFLICT_001**: Du und ${friendUsername} seid bereits befreundet.
+- **FRIEND_CONFLICT_002**: Du hast ${friendUsername} bereits eine Freundesanfrage gesendet.
+- **FRIEND_CONFLICT_003**: Du und ${friendUsername} seid keine Freunde.
+- **FRIEND_NOTFOUND_001**: Es ist kein Benutzer mit dieser E-Mail registriert.
+- **FRIEND_NOTFOUND_002**: ${friendUsername} existiert nicht.
+- **FRIEND_NOTFOUND_003**: Du hast keine Freundschaftsanfrage von ${friendUsername}.
+
 ### RESOURCE (`SHOPPING_LIST`)
 
 - **SHOPPING_LIST_NOTFOUND_002**: Diese Einkaufsliste existiert nicht.
@@ -19,3 +28,5 @@
 
 - **SYS_ERROR_001**: Interner Serverfehler.
 - **SYS_DATABASE_001**: Fehler bei der Verbindung zur Datenbank.
+- **SYS_DATABASE_002**: Unbekannter Datenbank Fehler. Später erneut versuchen, oder Support kontaktieren
+- **SYS_DATABASE_003**: Fehler beim Entfernen des Freundes aus den Features.
