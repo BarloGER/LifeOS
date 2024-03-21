@@ -17,10 +17,8 @@ export const shoppingListSchema = Joi.object({
         name: Joi.string().required().messages({
           "string.empty": "Der Artikelname muss angegeben werden",
         }),
-        quantity: Joi.number().required().min(1).messages({
-          "number.base": "Die Menge muss eine Zahl sein",
-          "number.min": "Die Menge muss mindestens {#limit} sein",
-          "number.empty": "Die Menge muss angegeben werden",
+        quantity: Joi.string().required().messages({
+          "string.empty": "Die Menge muss angegeben werden",
         }),
         unit: Joi.string().required().messages({
           "string.empty": "Die Einheit muss angegeben werden",
