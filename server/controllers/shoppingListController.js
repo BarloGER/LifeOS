@@ -2,12 +2,13 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import { ErrorResponse } from "../utils/ErrorResponse.js";
 import ShoppingList from "../models/ShoppingList.js";
 
+// ToDo: Sicherstellen, dass sharedWith nur genutzt werden kann ,wenn der User auch wirklich ein Freund ist.
+
 export const createShoppingList = asyncHandler(async (req, res, next) => {
-  const { userID } = req;
-  const { name, items, sharedWith } = req.body;
+  const { ownerID, name, items, sharedWith } = req.body;
 
   await ShoppingList.create({
-    ownerID: userID,
+    ownerID,
     name,
     items,
     sharedWith,
@@ -20,7 +21,7 @@ export const getAllShoppingLists = asyncHandler(async (req, res, next) => {
   const { userID } = req;
 
   const shoppingLists = await ShoppingList.find({
-    $or: [{ ownerID: userID }, { sharedWith: userID }],
+    $or: [{ ownerID: userID }, { "sharedWith.friendID": userID }],
   });
 
   res.status(200).json({
@@ -67,7 +68,7 @@ export const editShoppingList = asyncHandler(async (req, res, next) => {
   if (
     !(
       userID === shoppingList.ownerID ||
-      shoppingList.sharedWith.includes(userID)
+      shoppingList.sharedWith.friendID.includes(userID)
     )
   ) {
     throw new ErrorResponse({

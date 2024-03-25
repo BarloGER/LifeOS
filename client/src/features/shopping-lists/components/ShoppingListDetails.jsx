@@ -19,8 +19,6 @@ export const ShoppingListDetails = () => {
     fetchListDetails();
   }, [token, shoppingListID]);
 
-  console.log(details);
-
   if (!details) return <p>Lädt...</p>;
 
   return (
