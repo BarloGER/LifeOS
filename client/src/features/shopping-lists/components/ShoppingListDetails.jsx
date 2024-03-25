@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { api } from "../../../lib/apiFacade";
-import "../assets/shopping-lists.css";
+import "../assets/shopping-list-details.css";
 
 export const ShoppingListDetails = () => {
   const { shoppingListID } = useParams();
@@ -22,7 +22,7 @@ export const ShoppingListDetails = () => {
   if (!details) return <p>Lädt...</p>;
 
   return (
-    <section className="shopping-lists-container">
+    <section className="shopping-list-details-container">
       <h2>{details.name}</h2>
       <ul>
         {details.items.map((item) => (

@@ -42,7 +42,7 @@ export const FriendShareList = ({
   }
 
   return (
-    <div className="friend-wrapper">
+    <div className="share-with-friends-container">
       {friends.map((friend, index) => (
         <div key={index}>
           <span>{friend.friendUsername} </span>

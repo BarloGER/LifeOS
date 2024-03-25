@@ -8,8 +8,9 @@ import {
   MdOutlineFilterListOff,
   MdOutlineArrowForwardIos,
 } from "react-icons/md";
-import { NewShoppingList } from "./NewShoppingList";
+import { ShoppingListCreator } from "./ShoppingListCreator";
 import { Message } from "../../../components/ui/Message";
+import "../assets/shopping-lists-collection.css";
 
 export const ShoppingListsCollection = ({
   shoppingLists,
@@ -58,9 +59,9 @@ export const ShoppingListsCollection = ({
   };
 
   return (
-    <section className="shopping-lists-container">
+    <section className="shopping-lists-collection">
       <div className="main-content">
-        <div className="search-and-controls">
+        <div className="search-controls">
           <div className="search">
             <input
               type="text"
@@ -70,7 +71,7 @@ export const ShoppingListsCollection = ({
             />
           </div>
           <div
-            className="filter-icons"
+            className="filter-toggle"
             onClick={() => setShowSettings(!showSettings)}
           >
             {showSettings ? (
@@ -80,7 +81,7 @@ export const ShoppingListsCollection = ({
             )}
           </div>
         </div>
-        <div className="active-filters">
+        <div className="filters-active">
           {showOnlyMine && (
             <div className="active-filter">
               <span>Fremde Listen ausblenden</span>
@@ -100,9 +101,9 @@ export const ShoppingListsCollection = ({
         </div>
         <div className="shopping-list-wrapper">
           {showSettings && (
-            <div className="filter-menu">
+            <div className="filters-menu">
               <h2>Filter</h2>
-              <div className="settings">
+              <div className="sort-filter-options">
                 <label className="filter-wrapper">
                   Fremde Listen ausblenden
                   <input
@@ -113,15 +114,15 @@ export const ShoppingListsCollection = ({
                 </label>
               </div>
               <h2>Sortieren</h2>
-              <div className="settings">
+              <div className="sort-filter-options">
                 <span onClick={() => sortOptionClickHandler("alphabetical")}>
                   Alphabetisch
                 </span>
-                <div className="arrow-wrapper">
+                <div className="sort-direction-arrows">
                   <MdArrowUpward
                     className={
                       sortBy === "alphabetical" && sortDirection === "ascending"
-                        ? "active-arrow"
+                        ? "sort-arrow-active"
                         : ""
                     }
                     onClick={() => {
@@ -133,7 +134,7 @@ export const ShoppingListsCollection = ({
                     className={
                       sortBy === "alphabetical" &&
                       sortDirection === "descending"
-                        ? "active-arrow"
+                        ? "sort-arrow-active"
                         : ""
                     }
                     onClick={() => {
@@ -144,15 +145,15 @@ export const ShoppingListsCollection = ({
                 </div>
               </div>
 
-              <div className="settings">
+              <div className="sort-filter-options">
                 <span onClick={() => sortOptionClickHandler("updated")}>
                   Neuste
                 </span>
-                <div className="arrow-wrapper">
+                <div className="sort-direction-arrows">
                   <MdArrowUpward
                     className={
                       sortBy === "updated" && sortDirection === "ascending"
-                        ? "active-arrow"
+                        ? "sort-arrow-active"
                         : ""
                     }
                     onClick={() => {
@@ -163,7 +164,7 @@ export const ShoppingListsCollection = ({
                   <MdArrowDownward
                     className={
                       sortBy === "updated" && sortDirection === "descending"
-                        ? "active-arrow"
+                        ? "sort-arrow-active"
                         : ""
                     }
                     onClick={() => {
@@ -176,13 +177,13 @@ export const ShoppingListsCollection = ({
             </div>
           )}
 
-          <div className="single-shopping-list">
+          <div className="shopping-lists-overview">
             {shoppingLists.length > 0 ? (
               shoppingLists.map((list) => (
                 <Link
                   key={list._id}
                   to={`/auth/shopping-lists/${list._id}`}
-                  className="item"
+                  className="list-item"
                 >
                   <p>{list.name}</p>
                   <MdOutlineArrowForwardIos />
@@ -195,8 +196,8 @@ export const ShoppingListsCollection = ({
         </div>
 
         {showNewList ? (
-          <div className="new-shopping-list">
-            <NewShoppingList
+          <div className="shopping-list-creator">
+            <ShoppingListCreator
               MdClose={MdClose}
               showNewList={showNewList}
               setShowNewList={setShowNewList}
@@ -225,7 +226,7 @@ export const ShoppingListsCollection = ({
         />
 
         <button
-          className="create-new-list-button"
+          className="button-create-list"
           onClick={() => setShowNewList(true)}
         >
           Neue Einkaufsliste
