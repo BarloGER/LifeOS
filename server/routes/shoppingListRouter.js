@@ -19,10 +19,19 @@ shoppingListRouter.post(
   createShoppingList,
 );
 shoppingListRouter.get("/shopping-lists", verifyToken, getAllShoppingLists);
+
 shoppingListRouter.get(
   "/shopping-lists/:shoppingListID",
   verifyToken,
   getSingleShoppingList,
 );
-shoppingListRouter.put("/shopping-lists", verifyToken, editShoppingList);
-shoppingListRouter.delete("/shopping-lists", verifyToken, deleteShoppingList);
+shoppingListRouter.put(
+  "/shopping-lists/:shoppingListID",
+  verifyToken,
+  editShoppingList,
+);
+shoppingListRouter.delete(
+  "/shopping-lists/:shoppingListID",
+  verifyToken,
+  deleteShoppingList,
+);
