@@ -11,6 +11,10 @@ import {
   getAllShoppingLists,
   getSingleShoppingList,
 } from "../features/shopping-lists";
+import {
+  deleteShoppingList,
+  editShoppingList,
+} from "../features/shopping-lists/services/shoppingListFetches";
 
 export const api = {
   // User-methods
@@ -26,4 +30,8 @@ export const api = {
   getAllShoppingLists: (token) => getAllShoppingLists(token),
   getSingleShoppingList: (token, shoppingListID) =>
     getSingleShoppingList(token, shoppingListID),
+  editShoppingList: (token, updatedData) =>
+    editShoppingList(token, updatedData),
+  deleteShoppingList: (token, shoppingListID) =>
+    deleteShoppingList(token, shoppingListID),
 };

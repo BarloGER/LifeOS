@@ -52,7 +52,8 @@ export const getSingleShoppingList = asyncHandler(async (req, res, next) => {
 
 export const editShoppingList = asyncHandler(async (req, res, next) => {
   const { userID } = req;
-  const { _id: shoppingListID, name, items, sharedWith } = req.body;
+  const { shoppingListID } = req.params;
+  const { name, items, sharedWith } = req.body;
 
   const shoppingList = await ShoppingList.findById(shoppingListID);
   if (!shoppingList) {
@@ -100,7 +101,7 @@ export const editShoppingList = asyncHandler(async (req, res, next) => {
 
 export const deleteShoppingList = asyncHandler(async (req, res, next) => {
   const { userID } = req;
-  const { _id: shoppingListID } = req.body;
+  const { shoppingListID } = req.params;
 
   const shoppingList = await ShoppingList.findById(shoppingListID);
   if (!shoppingList) {

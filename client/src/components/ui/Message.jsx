@@ -33,7 +33,7 @@ export const Message = ({
     }
   }, [isVisible, setSuccessMessage, setErrorMessage]);
 
-  let messageClass = "message";
+  let messageClass = "feedback-message";
   if (successMessage) {
     messageClass += " success-message";
   } else if (errorMessage) {

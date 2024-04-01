@@ -1,8 +1,9 @@
 import PropTypes from "prop-types";
 import { FriendShareList } from "../../../components/ui/FriendShareList";
 import { Message } from "../../../components/ui/Message";
+import "../assets/shopping-list-creator.css";
 
-export const NewShoppingList = ({
+export const ShoppingListCreator = ({
   MdClose,
   setShowNewList,
   list,
@@ -50,7 +51,7 @@ export const NewShoppingList = ({
         <h3>Einkaufslisten Name</h3>
         <input value={list.name} onChange={handleChangeListName} />
       </div>
-      <div className="item-wrapper">
+      <div className="items-table-container">
         <table>
           <thead>
             <tr>
@@ -89,7 +90,7 @@ export const NewShoppingList = ({
         </table>
       </div>
 
-      <div className="button-wrapper-1">
+      <div className="items-action-btns">
         <button onClick={addNewItem}>Hinzufügen</button>
         <button onClick={removeItem}>Entfernen</button>
       </div>
@@ -101,7 +102,7 @@ export const NewShoppingList = ({
         setErrorMessage={setErrorMessage}
       />
 
-      <div className="button-wrapper-2">
+      <div className="form-action-btns">
         <button onClick={() => createNewShoppingList()}>Speichern</button>
         <button onClick={() => cancelShoppingListEdit()}>Abbrechen</button>
         <button onClick={() => setOpenShare(!openShare)}>Teilen mit</button>
@@ -116,7 +117,7 @@ export const NewShoppingList = ({
   );
 };
 
-NewShoppingList.propTypes = {
+ShoppingListCreator.propTypes = {
   MdClose: PropTypes.func.isRequired,
   setShowNewList: PropTypes.func.isRequired,
   list: PropTypes.object.isRequired,
