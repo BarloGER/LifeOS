@@ -7,7 +7,7 @@ export const ShoppingLists = ({ user }) => {
   const token = localStorage.getItem("token");
   const [shoppingLists, setShoppingLists] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
-  const [list, setList] = useState({
+  const [newShoppingList, setNewShoppingList] = useState({
     ownerID: user._id,
     name: "",
     items: [{ name: "", quantity: "", unit: "" }],
@@ -85,18 +85,18 @@ export const ShoppingLists = ({ user }) => {
   const createNewShoppingList = async () => {
     try {
       // Filter empty items
-      const filteredItems = list.items.filter(
+      const filteredItems = newShoppingList.items.filter(
         (item) => item.name.trim() || item.quantity.trim() || item.unit.trim()
       );
       const newList = {
-        ...list,
+        ...newShoppingList,
         items: filteredItems,
       };
 
       const data = await api.createShoppingList(token, newList);
       if (data.message) {
         setSuccessMessage(data.message);
-        setList({
+        setNewShoppingList({
           ownerID: user._id,
           name: "",
           items: [{ name: "", quantity: "", unit: "" }],
@@ -104,6 +104,7 @@ export const ShoppingLists = ({ user }) => {
         });
         setOpenShare(false);
         setShowNewList(false);
+        fetchShoppingLists();
       }
     } catch (error) {
       setErrorMessage(error.message);
@@ -111,7 +112,7 @@ export const ShoppingLists = ({ user }) => {
   };
 
   const cancelShoppingListEdit = () => {
-    setList({
+    setNewShoppingList({
       ownerID: user._id,
       name: "",
       items: [{ name: "", quantity: "", unit: "" }],
@@ -137,8 +138,8 @@ export const ShoppingLists = ({ user }) => {
       showNewList={showNewList}
       setShowNewList={setShowNewList}
       createNewShoppingList={createNewShoppingList}
-      list={list}
-      setList={setList}
+      newShoppingList={newShoppingList}
+      setNewShoppingList={setNewShoppingList}
       openShare={openShare}
       setOpenShare={setOpenShare}
       user={user}
