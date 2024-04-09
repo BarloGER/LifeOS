@@ -66,7 +66,7 @@ export const App = () => {
           />
           <Route
             path="shopping-lists/:shoppingListID"
-            element={<ShoppingListDetails />}
+            element={<ShoppingListDetails user={user} />}
           />
         </Route>
       </Route>
