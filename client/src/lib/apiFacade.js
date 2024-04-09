@@ -30,8 +30,8 @@ export const api = {
   getAllShoppingLists: (token) => getAllShoppingLists(token),
   getSingleShoppingList: (token, shoppingListID) =>
     getSingleShoppingList(token, shoppingListID),
-  editShoppingList: (token, updatedData) =>
-    editShoppingList(token, updatedData),
+  editShoppingList: (token, shoppingListID, updatedData) =>
+    editShoppingList(token, shoppingListID, updatedData),
   deleteShoppingList: (token, shoppingListID) =>
     deleteShoppingList(token, shoppingListID),
 };
