@@ -85,6 +85,11 @@ a {
   color: var(--text-color);
 }
 
+input {
+  border: 1px solid var(--border-color);
+  outline: none;
+}
+
 ::-webkit-scrollbar {
   width: 10px;
 }
