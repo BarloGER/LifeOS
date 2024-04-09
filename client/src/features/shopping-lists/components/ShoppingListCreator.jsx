@@ -6,8 +6,8 @@ import "../assets/shopping-list-creator.css";
 export const ShoppingListCreator = ({
   MdClose,
   setShowNewList,
-  list,
-  setList,
+  newShoppingList,
+  setNewShoppingList,
   openShare,
   setOpenShare,
   user,
@@ -19,26 +19,30 @@ export const ShoppingListCreator = ({
   cancelShoppingListEdit,
 }) => {
   const handleChangeListName = (event) => {
-    setList((prev) => ({ ...prev, name: event.target.value }));
+    setNewShoppingList((prev) => ({ ...prev, name: event.target.value }));
   };
 
   const handleChangeItem = (index, field) => (event) => {
-    const updatedItems = [...list.items];
+    const updatedItems = [...newShoppingList.items];
     updatedItems[index][field] = event.target.value;
-    setList((prev) => ({ ...prev, items: updatedItems }));
+    setNewShoppingList((prev) => ({ ...prev, items: updatedItems }));
   };
 
   const addNewItem = () => {
-    setList((prev) => ({
+    setNewShoppingList((prev) => ({
       ...prev,
       items: [...prev.items, { name: "", quantity: "", unit: "" }],
     }));
   };
 
-  const removeItem = () => {
-    setList((prev) => ({
+  const removeItem = (indexToRemove) => {
+    if (newShoppingList.items.length === 0) {
+      return;
+    }
+
+    setNewShoppingList((prev) => ({
       ...prev,
-      items: prev.items.slice(0, -1),
+      items: prev.items.filter((_, index) => index !== indexToRemove),
     }));
   };
 
@@ -49,19 +53,19 @@ export const ShoppingListCreator = ({
       </div>
       <div className="new-list-heading">
         <h3>Einkaufslisten Name</h3>
-        <input value={list.name} onChange={handleChangeListName} />
+        <input value={newShoppingList.name} onChange={handleChangeListName} />
       </div>
       <div className="items-table-container">
         <table>
           <thead>
             <tr>
               <th>Name</th>
-              <th>Anzahl</th>
+              <th>#</th>
               <th>Art</th>
             </tr>
           </thead>
           <tbody>
-            {list.items.map((item, index) => (
+            {newShoppingList.items.map((item, index) => (
               <tr key={index}>
                 <td>
                   <input
@@ -84,6 +88,14 @@ export const ShoppingListCreator = ({
                     onChange={handleChangeItem(index, "unit")}
                   />
                 </td>
+                <td>
+                  <button
+                    className="remove-item"
+                    onClick={() => removeItem(index)}
+                  >
+                    x
+                  </button>
+                </td>
               </tr>
             ))}
           </tbody>
@@ -91,8 +103,7 @@ export const ShoppingListCreator = ({
       </div>
 
       <div className="items-action-btns">
-        <button onClick={addNewItem}>Hinzufügen</button>
-        <button onClick={removeItem}>Entfernen</button>
+        <button onClick={addNewItem}>Neues Feld Hinzufügen</button>
       </div>
 
       <Message
@@ -110,8 +121,8 @@ export const ShoppingListCreator = ({
       <FriendShareList
         openShare={openShare}
         friends={user.friends}
-        sharedWith={list.sharedWith}
-        setFeatureState={setList}
+        sharedWith={newShoppingList.sharedWith}
+        setFeatureState={setNewShoppingList}
       />
     </section>
   );
@@ -120,8 +131,8 @@ export const ShoppingListCreator = ({
 ShoppingListCreator.propTypes = {
   MdClose: PropTypes.func.isRequired,
   setShowNewList: PropTypes.func.isRequired,
-  list: PropTypes.object.isRequired,
-  setList: PropTypes.func.isRequired,
+  newShoppingList: PropTypes.object.isRequired,
+  setNewShoppingList: PropTypes.func.isRequired,
   openShare: PropTypes.bool.isRequired,
   setOpenShare: PropTypes.func.isRequired,
   user: PropTypes.object.isRequired,

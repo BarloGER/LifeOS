@@ -1,4 +1,7 @@
 import PropTypes from "prop-types";
+import "../../assets/friend-share-list.css";
+
+// ToDo: Verhindern dass Nicht befreundete Personen, aus der Liste verschwinden, wenn die checkbox angeklickt wird.
 
 export const FriendShareList = ({
   openShare,
@@ -10,7 +13,20 @@ export const FriendShareList = ({
     return null;
   }
 
-  // setFeatureState is the main feature state like setList for the ShoppingLists feature
+  const combinedList = friends.map((friend) => ({
+    ...friend,
+    isFriend: true,
+  }));
+
+  sharedWith.forEach((person) => {
+    if (!combinedList.some((friend) => friend.friendID === person.friendID)) {
+      combinedList.push({
+        ...person,
+        isFriend: false,
+      });
+    }
+  });
+
   const handleFriendCheckboxChange = (friend, isChecked) => {
     setFeatureState((prev) => {
       if (isChecked) {
@@ -43,15 +59,17 @@ export const FriendShareList = ({
 
   return (
     <div className="share-with-friends-container">
-      {friends.map((friend, index) => (
+      {combinedList.map((person, index) => (
         <div key={index}>
-          <span>{friend.friendUsername} </span>
+          <span className={person.isFriend ? "friend" : "non-friends"}>
+            {person.friendUsername}
+          </span>
           <input
             type="checkbox"
             onChange={(e) =>
-              handleFriendCheckboxChange(friend, e.target.checked)
+              handleFriendCheckboxChange(person, e.target.checked)
             }
-            checked={sharedWith.some((f) => f.friendID === friend.friendID)}
+            checked={sharedWith.some((f) => f.friendID === person.friendID)}
           />
         </div>
       ))}

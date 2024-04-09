@@ -27,8 +27,8 @@ export const ShoppingListsCollection = ({
   showNewList,
   setShowNewList,
   createNewShoppingList,
-  list,
-  setList,
+  newShoppingList,
+  setNewShoppingList,
   openShare,
   setOpenShare,
   user,
@@ -202,8 +202,8 @@ export const ShoppingListsCollection = ({
               showNewList={showNewList}
               setShowNewList={setShowNewList}
               createNewShoppingList={createNewShoppingList}
-              list={list}
-              setList={setList}
+              newShoppingList={newShoppingList}
+              setNewShoppingList={setNewShoppingList}
               openShare={openShare}
               setOpenShare={setOpenShare}
               user={user}
@@ -251,8 +251,8 @@ ShoppingListsCollection.propTypes = {
   showNewList: PropTypes.bool.isRequired,
   setShowNewList: PropTypes.func.isRequired,
   createNewShoppingList: PropTypes.func.isRequired,
-  list: PropTypes.object.isRequired,
-  setList: PropTypes.func.isRequired,
+  newShoppingList: PropTypes.object.isRequired,
+  setNewShoppingList: PropTypes.func.isRequired,
   openShare: PropTypes.bool.isRequired,
   setOpenShare: PropTypes.func.isRequired,
   user: PropTypes.object,
