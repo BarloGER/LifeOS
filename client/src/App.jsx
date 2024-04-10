@@ -30,7 +30,7 @@ export const App = () => {
     createRoutesFromElements(
       <Route
         path="/"
-        element={<GlobalLayout isAuthenticated={isAuthenticated} />}
+        element={<GlobalLayout isAuthenticated={isAuthenticated} user={user} />}
       >
         <Route
           index

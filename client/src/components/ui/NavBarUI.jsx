@@ -1,8 +1,16 @@
 import PropTypes from "prop-types";
 import { NavLink } from "react-router-dom";
-import { MdMenu, MdClose } from "react-icons/md";
+import {
+  MdMenu,
+  MdClose,
+  MdMarkunreadMailbox,
+  MdOutlineMarkunreadMailbox,
+  MdOutlineCheck,
+  MdKeyboardDoubleArrowUp,
+} from "react-icons/md";
+import { MessageCenter } from "../../features/message-center";
 
-export const NavBarUI = ({ toggleHamburger, isClicked }) => {
+export const NavBarUI = ({ toggleHamburger, isClicked, user }) => {
   return (
     <nav className="navbar">
       <div className="hamburger">
@@ -16,6 +24,16 @@ export const NavBarUI = ({ toggleHamburger, isClicked }) => {
       <div className="link-wrapper">
         <NavLink to="/auth/dashboard">Dashboard</NavLink>
         <NavLink to="#">Profil</NavLink>
+        {user ? (
+          <MessageCenter
+            MdMarkunreadMailbox={MdMarkunreadMailbox}
+            MdOutlineMarkunreadMailbox={MdOutlineMarkunreadMailbox}
+            MdClose={MdClose}
+            MdOutlineCheck={MdOutlineCheck}
+            MdKeyboardDoubleArrowUp={MdKeyboardDoubleArrowUp}
+            user={user}
+          />
+        ) : null}
       </div>
     </nav>
   );
@@ -24,4 +42,5 @@ export const NavBarUI = ({ toggleHamburger, isClicked }) => {
 NavBarUI.propTypes = {
   toggleHamburger: PropTypes.func.isRequired,
   isClicked: PropTypes.bool.isRequired,
+  user: PropTypes.object,
 };

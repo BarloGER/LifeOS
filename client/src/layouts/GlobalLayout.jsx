@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { Outlet, useLocation } from "react-router-dom";
 import { NavBar } from "./NavBar";
 
-export const GlobalLayout = ({ isAuthenticated }) => {
+export const GlobalLayout = ({ isAuthenticated, user }) => {
   const location = useLocation();
 
   useEffect(() => {
@@ -14,7 +14,7 @@ export const GlobalLayout = ({ isAuthenticated }) => {
 
   return (
     <>
-      <NavBar />
+      <NavBar user={user} />
       <Outlet />
     </>
   );

@@ -123,6 +123,12 @@
   gap: 1rem;
 }
 
+.shopping-list-creator .friend-wrapper {
+  text-align: center;
+  font-size: 2rem;
+  padding-top: 1rem;
+}
+
 .shopping-list-creator .share-with-friends-container {
   margin-top: 2rem;
   width: 100%;

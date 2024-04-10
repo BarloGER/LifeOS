@@ -112,6 +112,7 @@
   align-items: flex-start;
   gap: 1.5rem;
   text-align: left;
+  font-size: 3rem;
 }
 
 .shopping-lists-collection .main-content .list-item {
