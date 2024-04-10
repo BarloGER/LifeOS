@@ -24,6 +24,13 @@ const friendRequestSchema = new Schema(
   { _id: false },
 );
 
+const messageSchema = new Schema(
+  {
+    friendRequestFrom: [friendRequestSchema],
+  },
+  { _id: false },
+);
+
 const userSchema = new Schema(
   {
     username: { type: String, required: true, unique: true },
@@ -31,7 +38,7 @@ const userSchema = new Schema(
     passwordObj: passwordObjSchema,
     lastLogin: { type: Date, default: Date.now },
     friends: [friendSchema],
-    friendRequestFrom: [friendRequestSchema],
+    messages: [messageSchema],
   },
   { timestamps: true },
 );

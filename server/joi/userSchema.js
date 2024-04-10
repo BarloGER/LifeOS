@@ -30,10 +30,16 @@ export const userSchema = Joi.object({
       }),
     )
     .optional(),
-  friendRequestFrom: Joi.array().items(
-    Joi.object({
-      friendID: Joi.string().required(),
-      friendUsername: Joi.string().required(),
-    }),
-  ),
+  messages: Joi.array()
+    .items(
+      Joi.object({
+        friendRequestFrom: Joi.array().items(
+          Joi.object({
+            friendID: Joi.string().required(),
+            friendUsername: Joi.string().required(),
+          }),
+        ),
+      }),
+    )
+    .optional(),
 });

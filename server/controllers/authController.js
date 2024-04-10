@@ -45,6 +45,8 @@ export const signUp = asyncHandler(async (req, res, next) => {
       lastPasswordUpdate: new Date(),
     },
     lastLogin: new Date(),
+    friends: [],
+    messages: [{ friendRequestFrom: [] }],
     ...rest,
   });
 
