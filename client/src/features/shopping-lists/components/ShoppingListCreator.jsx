@@ -102,17 +102,15 @@ export const ShoppingListCreator = ({
         </table>
       </div>
 
-      <div className="items-action-btns">
-        <button onClick={addNewItem}>Neues Feld Hinzufügen</button>
-      </div>
-
       <Message
         successMessage={successMessage}
         setSuccessMessage={setSuccessMessage}
         errorMessage={errorMessage}
         setErrorMessage={setErrorMessage}
       />
-
+      <div className="items-action-btns">
+        <button onClick={addNewItem}>Neues Feld Hinzufügen</button>
+      </div>
       <div className="form-action-btns">
         <button onClick={() => createNewShoppingList()}>Speichern</button>
         <button onClick={() => cancelShoppingListEdit()}>Abbrechen</button>

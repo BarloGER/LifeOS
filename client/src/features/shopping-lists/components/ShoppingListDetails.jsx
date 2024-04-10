@@ -195,10 +195,6 @@ export const ShoppingListDetails = ({ user }) => {
           </table>
         </div>
 
-        <div className="items-action-btns">
-          <button onClick={addNewItem}>Neues Feld Hinzufügen</button>
-        </div>
-
         <Message
           successMessage={successMessage}
           setSuccessMessage={setSuccessMessage}
@@ -206,11 +202,16 @@ export const ShoppingListDetails = ({ user }) => {
           setErrorMessage={setErrorMessage}
         />
 
+        <div className="items-action-btns">
+          <button onClick={addNewItem}>Neues Feld Hinzufügen</button>
+        </div>
+
         <div className="form-action-btns">
           <button onClick={() => saveListChanges()}>Speichern</button>
           <button onClick={() => setIsEditing(false)}>Abbrechen</button>
           <button onClick={() => setOpenShare(!openShare)}>Teilen mit</button>
         </div>
+
         <FriendShareList
           openShare={openShare}
           friends={user.friends}
