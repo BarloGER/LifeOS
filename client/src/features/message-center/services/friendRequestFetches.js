@@ -43,3 +43,25 @@ export const rejectFriendRequest = async (token, rejectData) => {
 
   return response.data;
 };
+
+export const sendFriendRequest = async (token, friendData) => {
+  const response = await apiFetch(
+    `/auth/friend`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(friendData),
+    },
+    token
+  );
+
+  if (response.error) {
+    throw new Error(
+      response.error.message || "Es ist ein unbekannter Fehler aufgetreten."
+    );
+  }
+
+  return response.data;
+};

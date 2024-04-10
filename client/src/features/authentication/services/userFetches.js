@@ -48,7 +48,7 @@ export const getUser = async (token) => {
   return response.data;
 };
 
-export const editUser = async (updatedData, token) => {
+export const editUser = async (token, updatedData) => {
   const response = await apiFetch(
     `/auth/me`,
     {
@@ -75,6 +75,28 @@ export const deleteUser = async (token) => {
     `/auth/me`,
     {
       method: "DELETE",
+    },
+    token
+  );
+
+  if (response.error) {
+    throw new Error(
+      response.error.message || "Es ist ein unbekannter Fehler aufgetreten."
+    );
+  }
+
+  return response.data;
+};
+
+export const getUserByUsername = async (token, username) => {
+  const response = await apiFetch(
+    `/auth/users`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(username),
     },
     token
   );

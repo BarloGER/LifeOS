@@ -16,4 +16,4 @@ userRouter.get("/me", verifyToken, getUser);
 userRouter.put("/me", verifyToken, validateJoi(userSchema), editUser);
 userRouter.delete("/me", verifyToken, deleteUserTransaction, deleteUser);
 
-userRouter.get("/users", verifyToken, getUserByUsername);
+userRouter.post("/users", verifyToken, getUserByUsername);
