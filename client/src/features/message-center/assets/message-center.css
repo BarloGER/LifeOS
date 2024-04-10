@@ -1,0 +1,94 @@
+.inbox-icon {
+  font-size: 2.5rem;
+}
+
+.inbox::before {
+  content: attr(data-count);
+  position: absolute;
+  top: 0.8rem;
+  right: 0.3rem;
+  border-radius: 50%;
+  width: 1.5rem;
+  height: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.inbox.filled::before {
+  background-color: var(--error-color);
+  color: var(--text-color);
+}
+
+.inbox.empty::before {
+  background-color: var(--success-color);
+  color: var(--text-color);
+}
+
+.message-center {
+  margin: 0 auto;
+  width: 100%;
+  height: fit-content;
+  min-height: 10rem;
+  padding: 1rem 1rem 0 1rem;
+  background-color: var(--component-background-color);
+  border-bottom: 0.5rem solid var(--border-color);
+  position: absolute;
+  top: 5rem;
+  left: 0rem;
+  font-size: 3rem;
+  color: var(--text-color);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 3rem;
+}
+
+.message-container {
+  width: 100%;
+  font-size: 3rem;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+}
+
+.messages {
+  border-bottom: 1px solid var(--border-color);
+}
+
+.friend-message {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 5rem;
+}
+
+.friend-messages-buttons {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  gap: 1.5rem;
+  background-color: unset;
+}
+
+.accept-friend-request {
+  color: var(--success-color);
+}
+
+.reject-friend-request {
+  color: var(--error-color);
+}
+
+.close-message-center {
+  width: 100%;
+  color: var(--error-color);
+  font-size: 3rem;
+}
+
+.feedback-message {
+  width: 100%;
+  text-align: center;
+  font-size: 2rem;
+  padding-top: 2rem;
+}

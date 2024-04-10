@@ -13,7 +13,7 @@ export const validateJoi = (schema) => (req, res, next) => {
   }
 
   const context = {
-    $isSignUp: req.path === "/signup",
+    $isSignUp: req.originalUrl.includes("/auth/signup"),
   };
 
   const { error } = schema.validate(req.body, { context });

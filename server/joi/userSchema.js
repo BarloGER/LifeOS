@@ -16,7 +16,11 @@ export const userSchema = Joi.object({
   password: Joi.string()
     .min(8)
     .max(20)
-    .when("$isSignUp", { is: true, then: Joi.required() })
+    .when("$isSignUp", {
+      is: true,
+      then: Joi.required(),
+      otherwise: Joi.allow(""),
+    })
     .messages({
       "string.min": "Das Passwort muss mindestens {#limit} Zeichen lang sein",
       "string.max": "Das Passwort darf höchstens {#limit} Zeichen lang sein",
@@ -30,10 +34,16 @@ export const userSchema = Joi.object({
       }),
     )
     .optional(),
-  friendRequestFrom: Joi.array().items(
-    Joi.object({
-      friendID: Joi.string().required(),
-      friendUsername: Joi.string().required(),
-    }),
-  ),
+  messages: Joi.array()
+    .items(
+      Joi.object({
+        friendRequestFrom: Joi.array().items(
+          Joi.object({
+            friendID: Joi.string().required(),
+            friendUsername: Joi.string().required(),
+          }),
+        ),
+      }),
+    )
+    .optional(),
 });

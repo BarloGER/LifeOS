@@ -145,7 +145,6 @@
   margin: 0 auto;
   font-size: 2rem;
   text-align: center;
-  margin: 1rem 0;
 }
 
 .edit-shopping-list-details .close-button {
@@ -210,7 +209,7 @@
   display: flex;
   justify-content: center;
   gap: 1rem;
-  margin-top: 2rem;
+  margin: 2rem 0;
 }
 
 .edit-shopping-list-details .items-action-btns button {

@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { verifyToken } from "../middlewares/verifyToken.js";
-import { removeFriendFromAllFeatures } from "../middlewares/removeFriendFromAllFeatures.js";
+import { removeFriendTransaction } from "../middlewares/removeFriendTransaction.js";
 import {
   sendFriendRequest,
   acceptFriendRequest,
@@ -14,7 +14,7 @@ friendRouter.post("/friend", verifyToken, sendFriendRequest);
 friendRouter.delete(
   "/friend",
   verifyToken,
-  removeFriendFromAllFeatures,
+  removeFriendTransaction,
   deleteFriend,
 );
 

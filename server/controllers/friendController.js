@@ -43,8 +43,10 @@ export const sendFriendRequest = asyncHandler(async (req, res, next) => {
   }
 
   // Check if there is already a friend request
-  const pendingRequest = friend.friendRequestFrom.some(
-    (request) => request.friendID === userID,
+  const pendingRequest = friend.messages.some(
+    (message) =>
+      message.friendRequestFrom &&
+      message.friendRequestFrom.some((request) => request.friendID === userID),
   );
   if (pendingRequest) {
     throw new ErrorResponse({
@@ -55,24 +57,24 @@ export const sendFriendRequest = asyncHandler(async (req, res, next) => {
     });
   }
 
-  // Add request to friend
-  const addRequestToFriend = await friend.updateOne({
-    $addToSet: {
-      friendRequestFrom: {
-        friendID: userID,
-        friendUsername: username,
-      },
-    },
-  });
-  if (!addRequestToFriend) {
-    throw new ErrorResponse({
-      message:
-        "Unbekannter Datenbank Fehler. Später erneut versuchen, oder Support kontaktieren",
-      statusCode: 500,
-      errorType: "ServerError",
-      errorCode: "SYS_DATABASE_002",
-    });
+  let messageForFriendRequests = friend.messages.find(
+    (message) => message.friendRequestFrom != null,
+  );
+
+  // If there is no message object for friend requests, create one
+  if (!messageForFriendRequests) {
+    messageForFriendRequests = { friendRequestFrom: [] };
+    friend.messages.push(messageForFriendRequests);
   }
+
+  // Add the friend request to the message object
+  messageForFriendRequests.friendRequestFrom.push({
+    friendID: userID,
+    friendUsername: username,
+  });
+
+  // Save the updated friend document
+  await friend.save();
 
   res.status(200).json({
     message: "Freundschaftsanfrage gesendet.",
@@ -108,8 +110,12 @@ export const acceptFriendRequest = asyncHandler(async (req, res, next) => {
   }
 
   // Check if there is an active request
-  const pendingRequest = user.friendRequestFrom.some(
-    (request) => request.friendID === friendID,
+  const pendingRequest = user.messages.some(
+    (message) =>
+      message.friendRequestFrom &&
+      message.friendRequestFrom.some(
+        (request) => request.friendID === friendID,
+      ),
   );
   if (!pendingRequest) {
     throw new ErrorResponse({
@@ -123,7 +129,7 @@ export const acceptFriendRequest = asyncHandler(async (req, res, next) => {
   // Remove friendRequest and add friend to friends arr
   const updateUser = await user.updateOne(
     {
-      $pull: { friendRequestFrom: { friendID: friendID } },
+      $pull: { "messages.$[].friendRequestFrom": { friendID: friendID } },
       $addToSet: {
         friends: { friendID: friendID, friendUsername: friendUsername },
       },
@@ -184,8 +190,12 @@ export const rejectFriendRequest = asyncHandler(async (req, res, next) => {
   }
 
   // Check if there is an pending request
-  const pendingRequest = user.friendRequestFrom.some(
-    (request) => request.friendID === friendID,
+  const pendingRequest = user.messages.some(
+    (message) =>
+      message.friendRequestFrom &&
+      message.friendRequestFrom.some(
+        (request) => request.friendID === friendID,
+      ),
   );
   if (!pendingRequest) {
     throw new ErrorResponse({
@@ -198,7 +208,7 @@ export const rejectFriendRequest = asyncHandler(async (req, res, next) => {
 
   // Remove the friend request
   const removeRequest = await User.findByIdAndUpdate(userID, {
-    $pull: { friendRequestFrom: { friendID: friendID } },
+    $pull: { "messages.$[].friendRequestFrom": { friendID: friendID } },
   });
   if (!removeRequest) {
     throw new ErrorResponse({
