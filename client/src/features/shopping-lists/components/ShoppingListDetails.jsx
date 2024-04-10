@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { api } from "../../../lib/apiFacade";
 import { LoadingScreen } from "../../../components/ui/LoadingSceen";
@@ -16,6 +16,7 @@ export const ShoppingListDetails = ({ user }) => {
   const [errorMessage, setErrorMessage] = useState("");
   const [isEditing, setIsEditing] = useState(false);
   const [openShare, setOpenShare] = useState(false);
+  const [deletionRequest, setDeletionRequest] = useState(false);
   const [editableList, setEditableList] = useState({
     name: "",
     items: [{ name: "", quantity: "", unit: "" }],
@@ -24,7 +25,7 @@ export const ShoppingListDetails = ({ user }) => {
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
 
-  const fetchListDetails = async () => {
+  const fetchListDetails = useCallback(async () => {
     try {
       const response = await api.getSingleShoppingList(token, shoppingListID);
       if (response && response.shoppingList) {
@@ -43,11 +44,11 @@ export const ShoppingListDetails = ({ user }) => {
     } catch (error) {
       setErrorMessage(error.message);
     }
-  };
+  }, [token, shoppingListID]);
 
   useEffect(() => {
     fetchListDetails();
-  }, [token, shoppingListID]);
+  }, [fetchListDetails]);
 
   if (!shoppingListDetails) return <LoadingScreen />;
 
@@ -56,6 +57,7 @@ export const ShoppingListDetails = ({ user }) => {
       const data = await api.deleteShoppingList(token, shoppingListID);
       if (data.message) {
         setSuccessMessage(data.message);
+        setDeletionRequest(false);
         setTimeout(() => {
           navigate("/auth/shopping-lists");
         }, 1000);
@@ -125,8 +127,6 @@ export const ShoppingListDetails = ({ user }) => {
   };
 
   const saveListChanges = async () => {
-    console.log("Speichere Änderungen für:", editableList);
-
     try {
       const data = await api.editShoppingList(
         token,
@@ -232,57 +232,70 @@ export const ShoppingListDetails = ({ user }) => {
         <table className="items-table-container">
           <thead>
             <tr>
-              <th className="checkbox"></th>
               <th className="name">Name</th>
               <th className="quantity">#</th>
               <th className="unit">Art</th>
+              <th className="checkbox"></th>
             </tr>
           </thead>
           <tbody>
             {shoppingListDetails.items.map((item) => (
               <tr key={item._id} className={item.completed ? "completed" : ""}>
-                <td>
-                  <input
-                    type="checkbox"
-                    checked={item.completed}
-                    onChange={() => toggleItemCompletion(item._id)}
-                  />
-                </td>
                 <td className="name">{item.name}</td>
                 <td className="quantity">{item.quantity}</td>
                 <td className="unit">{item.unit}</td>
+                <td className="checkbox">
+                  <label className="checkbox">
+                    <input
+                      className="checkmark"
+                      type="checkbox"
+                      checked={item.completed}
+                      onChange={() => toggleItemCompletion(item._id)}
+                    />
+                    <span className="checkmark"></span>{" "}
+                  </label>
+                </td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
-      <div className="footer">
-        <Message
-          className="message"
-          successMessage={successMessage}
-          setSuccessMessage={setSuccessMessage}
-          errorMessage={errorMessage}
-          setErrorMessage={setErrorMessage}
-        />
-        <button
-          onClick={() => {
-            if (shoppingListDetails) {
-              setEditableList({
-                name: shoppingListDetails.name,
-                items: shoppingListDetails.items.map((item) => ({ ...item })),
-                sharedWith: shoppingListDetails.sharedWith.map((friend) => ({
-                  ...friend,
-                })),
-              });
-              setIsEditing(true);
-            }
-          }}
-        >
-          Bearbeiten
-        </button>
+      {deletionRequest ? (
+        <div className="deletion-request">
+          <button className="deletion" onClick={() => deleteShoppingList()}>
+            Löschen
+          </button>
+          <button onClick={() => setDeletionRequest(false)}>Abbrechen</button>
+        </div>
+      ) : (
+        <div className="footer">
+          <Message
+            className="message"
+            successMessage={successMessage}
+            setSuccessMessage={setSuccessMessage}
+            errorMessage={errorMessage}
+            setErrorMessage={setErrorMessage}
+          />
+          <button
+            onClick={() => {
+              if (shoppingListDetails) {
+                setEditableList({
+                  name: shoppingListDetails.name,
+                  items: shoppingListDetails.items.map((item) => ({ ...item })),
+                  sharedWith: shoppingListDetails.sharedWith.map((friend) => ({
+                    ...friend,
+                  })),
+                });
+                setIsEditing(true);
+              }
+            }}
+          >
+            Bearbeiten
+          </button>
 
-        <ImBin2 className="bin" onClick={deleteShoppingList} />
-      </div>
+          <ImBin2 className="bin" onClick={() => setDeletionRequest(true)} />
+        </div>
+      )}
     </section>
   );
 };

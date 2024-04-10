@@ -10,7 +10,7 @@ import {
 } from "react-icons/md";
 import { MessageCenter } from "../../features/message-center";
 
-export const NavBarUI = ({ toggleHamburger, isClicked, user }) => {
+export const NavBarUI = ({ toggleHamburger, isClicked, user, setUser }) => {
   return (
     <nav className="navbar">
       <div className="hamburger">
@@ -32,6 +32,7 @@ export const NavBarUI = ({ toggleHamburger, isClicked, user }) => {
             MdOutlineCheck={MdOutlineCheck}
             MdKeyboardDoubleArrowUp={MdKeyboardDoubleArrowUp}
             user={user}
+            setUser={setUser}
           />
         ) : null}
       </div>
@@ -43,4 +44,5 @@ NavBarUI.propTypes = {
   toggleHamburger: PropTypes.func.isRequired,
   isClicked: PropTypes.bool.isRequired,
   user: PropTypes.object,
+  setUser: PropTypes.func,
 };

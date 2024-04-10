@@ -4,7 +4,7 @@ import { NavBarUI } from "../components/ui/NavBarUI";
 import { NavBarSideMenu } from "../components/ui/NavBarSideMenu";
 import "../assets/navbar.css";
 
-export const NavBar = ({ user }) => {
+export const NavBar = ({ user, setUser }) => {
   const [isClicked, setIsClicked] = useState(false);
 
   const toggleHamburger = () => {
@@ -17,6 +17,7 @@ export const NavBar = ({ user }) => {
         toggleHamburger={toggleHamburger}
         isClicked={isClicked}
         user={user}
+        setUser={setUser}
       />
       <NavBarSideMenu toggleHamburger={toggleHamburger} isClicked={isClicked} />
     </>
@@ -25,4 +26,5 @@ export const NavBar = ({ user }) => {
 
 NavBar.propTypes = {
   user: PropTypes.object,
+  setUser: PropTypes.func,
 };
