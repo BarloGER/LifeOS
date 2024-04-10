@@ -11,10 +11,12 @@ export const UserProfile = ({ user, setUser, setIsAuthenticated }) => {
   const [passwordsMatch, setPasswordsMatch] = useState(true);
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const [friendUsername, setFriendUsername] = useState("");
   const [editedUser, setEditedUser] = useState({
     email: "",
     username: "",
     password: "",
+    repeatPassword: "",
   });
 
   useEffect(() => {
@@ -54,7 +56,7 @@ export const UserProfile = ({ user, setUser, setIsAuthenticated }) => {
       const userData = { ...editedUser };
       delete userData.repeatPassword;
 
-      const data = await api.editUser(userData, token);
+      const data = await api.editUser(token, userData);
       if (data.message) {
         setSuccessMessage(data.message);
         setUser((prevUser) => ({
@@ -72,6 +74,40 @@ export const UserProfile = ({ user, setUser, setIsAuthenticated }) => {
     }
   };
 
+  const sendFriendRequests = async (friendUsername) => {
+    const friendUsernameToObj = {
+      username: friendUsername,
+    };
+
+    try {
+      const friend = await api.getUserByUsername(token, friendUsernameToObj);
+      if (!friend) {
+        setErrorMessage(friend.message);
+        return;
+      }
+
+      const friendData = {
+        username: user.username,
+        friendID: friend._id,
+        friendUsername,
+      };
+      const sendRequest = await api.sendFriendRequest(token, friendData);
+      if (sendRequest.message) {
+        setSuccessMessage(sendRequest.message);
+        setFriendUsername("");
+      }
+    } catch (error) {
+      setErrorMessage(error.message);
+    }
+  };
+
+  const logOut = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("lastPath");
+    localStorage.removeItem("shopping-list-settings");
+    setIsAuthenticated(false);
+  };
+
   const deleteAccount = async () => {
     try {
       const data = await api.deleteUser(token);
@@ -84,13 +120,6 @@ export const UserProfile = ({ user, setUser, setIsAuthenticated }) => {
     } catch (error) {
       setErrorMessage(error.message);
     }
-  };
-
-  const logOut = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("lastPath");
-    localStorage.removeItem("shopping-list-settings");
-    setIsAuthenticated(false);
   };
 
   return (
@@ -114,6 +143,9 @@ export const UserProfile = ({ user, setUser, setIsAuthenticated }) => {
       errorMessage={errorMessage}
       setErrorMessage={setErrorMessage}
       isLoading={isLoading}
+      sendFriendRequests={sendFriendRequests}
+      friendUsername={friendUsername}
+      setFriendUsername={setFriendUsername}
     />
   );
 };

@@ -24,12 +24,19 @@ export const UserProfileForm = ({
   errorMessage,
   setErrorMessage,
   isLoading,
+  sendFriendRequests,
+  friendUsername,
+  setFriendUsername,
 }) => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [deletionRequest, setDeletionRequest] = useState(false);
 
   const togglePasswordVisibility = () => {
     setIsPasswordVisible(!isPasswordVisible);
+  };
+
+  const handleFriendUsernameChange = (e) => {
+    setFriendUsername(e.target.value);
   };
 
   return user ? (
@@ -152,6 +159,19 @@ export const UserProfileForm = ({
           </form>
         ) : (
           <>
+            <div className="friend-wrapper">
+              <div className="friend-input-wrapper">
+                <input
+                  placeholder="Benutzername des Freundes"
+                  value={friendUsername}
+                  onChange={handleFriendUsernameChange}
+                />
+
+                <button onClick={() => sendFriendRequests(friendUsername)}>
+                  Freundschaftsanfrage senden
+                </button>
+              </div>
+            </div>
             <button onClick={() => setIsEditing(true)}>
               Profil bearbeiten
             </button>
@@ -205,4 +225,7 @@ UserProfileForm.propTypes = {
   errorMessage: PropTypes.string.isRequired,
   setErrorMessage: PropTypes.func.isRequired,
   isLoading: PropTypes.bool.isRequired,
+  sendFriendRequests: PropTypes.func.isRequired,
+  friendUsername: PropTypes.string.isRequired,
+  setFriendUsername: PropTypes.func.isRequired,
 };
