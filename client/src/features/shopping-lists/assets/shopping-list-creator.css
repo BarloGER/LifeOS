@@ -1,12 +1,15 @@
 .shopping-list-creator {
-  height: 100vh;
-  max-height: calc(100vh - 6rem);
-  margin: 1rem;
+  margin: 1rem 1rem 0 1rem;
   position: absolute;
   font-size: 7rem;
   z-index: 100;
   border-radius: 2px;
   background-color: var(--component-background-color);
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  overflow: auto;
 }
 
 .shopping-list-creator ::-webkit-scrollbar-track {
