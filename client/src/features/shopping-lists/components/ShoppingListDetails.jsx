@@ -24,8 +24,8 @@ export const ShoppingListDetails = ({ user }) => {
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
 
-  useEffect(() => {
-    const fetchListDetails = async () => {
+  const fetchListDetails = async () => {
+    try {
       const response = await api.getSingleShoppingList(token, shoppingListID);
       if (response && response.shoppingList) {
         const storedListStatus = JSON.parse(
@@ -40,8 +40,12 @@ export const ShoppingListDetails = ({ user }) => {
           items: updatedItems,
         });
       }
-    };
+    } catch (error) {
+      setErrorMessage(error.message);
+    }
+  };
 
+  useEffect(() => {
     fetchListDetails();
   }, [token, shoppingListID]);
 
@@ -132,6 +136,7 @@ export const ShoppingListDetails = ({ user }) => {
       if (data.message) {
         setSuccessMessage(data.message);
         setIsEditing(false);
+        await fetchListDetails();
       }
     } catch (error) {
       setErrorMessage(error.message);
