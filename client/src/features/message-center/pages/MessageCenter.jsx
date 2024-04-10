@@ -12,6 +12,7 @@ export const MessageCenter = ({
   MdOutlineCheck,
   MdKeyboardDoubleArrowUp,
   user,
+  setUser,
 }) => {
   const [messages, setMessages] = useState([]);
   const [isClicked, setIsClicked] = useState(false);
@@ -46,6 +47,30 @@ export const MessageCenter = ({
         setMessages((currentMessages) =>
           currentMessages.filter((message) => message.friendID !== friendID)
         );
+
+        setUser((currentUser) => {
+          const updatedFriends = [
+            ...currentUser.friends,
+            { friendID, friendUsername },
+          ];
+
+          const updatedMessages = currentUser.messages.flatMap((message) =>
+            message.friendRequestFrom.filter(
+              (request) => request.friendID !== friendID
+            )
+          );
+
+          return {
+            ...currentUser,
+            friends: updatedFriends,
+            messages: [
+              {
+                ...currentUser.messages[0],
+                friendRequestFrom: updatedMessages,
+              },
+            ],
+          };
+        });
       }
     } catch (error) {
       setErrorMessage(error.message);
@@ -150,4 +175,5 @@ MessageCenter.propTypes = {
   MdClose: PropTypes.func.isRequired,
   MdOutlineCheck: PropTypes.func.isRequired,
   user: PropTypes.object.isRequired,
+  setUser: PropTypes.func,
 };

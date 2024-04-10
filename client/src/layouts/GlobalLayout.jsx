@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { Outlet, useLocation } from "react-router-dom";
 import { NavBar } from "./NavBar";
 
-export const GlobalLayout = ({ isAuthenticated, user }) => {
+export const GlobalLayout = ({ isAuthenticated, user, setUser }) => {
   const location = useLocation();
 
   useEffect(() => {
@@ -14,12 +14,14 @@ export const GlobalLayout = ({ isAuthenticated, user }) => {
 
   return (
     <>
-      <NavBar user={user} />
+      <NavBar user={user} setUser={setUser} />
       <Outlet />
     </>
   );
 };
 
 GlobalLayout.propTypes = {
+  user: PropTypes.object,
+  setUser: PropTypes.func,
   isAuthenticated: PropTypes.bool.isRequired,
 };
