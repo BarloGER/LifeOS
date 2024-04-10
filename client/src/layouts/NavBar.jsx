@@ -1,3 +1,4 @@
+import PropTypes from "prop-types";
 import { useState } from "react";
 import { NavBarUI } from "../components/ui/NavBarUI";
 import { NavBarSideMenu } from "../components/ui/NavBarSideMenu";
@@ -20,4 +21,8 @@ export const NavBar = ({ user }) => {
       <NavBarSideMenu toggleHamburger={toggleHamburger} isClicked={isClicked} />
     </>
   );
+};
+
+NavBar.propTypes = {
+  user: PropTypes.object,
 };

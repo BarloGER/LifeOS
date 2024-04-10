@@ -23,7 +23,7 @@ export const NavBarUI = ({ toggleHamburger, isClicked, user }) => {
 
       <div className="link-wrapper">
         <NavLink to="/auth/dashboard">Dashboard</NavLink>
-        <NavLink to="#">Profil</NavLink>
+        <NavLink to="/auth/user-profile">Profil</NavLink>
         {user ? (
           <MessageCenter
             MdMarkunreadMailbox={MdMarkunreadMailbox}
