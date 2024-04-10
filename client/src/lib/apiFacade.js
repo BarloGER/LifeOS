@@ -15,6 +15,10 @@ import {
   deleteShoppingList,
   editShoppingList,
 } from "../features/shopping-lists/services/shoppingListFetches";
+import {
+  acceptFriendRequest,
+  rejectFriendRequest,
+} from "../features/message-center";
 
 export const api = {
   // User-methods
@@ -24,7 +28,7 @@ export const api = {
   editUser: (updatedData, token) => editUser(updatedData, token),
   deleteUser: (token) => deleteUser(token),
 
-  //Shopping List methods
+  // Shopping List methods
   createShoppingList: (token, newShoppingList) =>
     createShoppingList(token, newShoppingList),
   getAllShoppingLists: (token) => getAllShoppingLists(token),
@@ -34,4 +38,10 @@ export const api = {
     editShoppingList(token, shoppingListID, updatedData),
   deleteShoppingList: (token, shoppingListID) =>
     deleteShoppingList(token, shoppingListID),
+
+  // Friend-methods
+  acceptFriendRequest: (token, acceptData) =>
+    acceptFriendRequest(token, acceptData),
+  rejectFriendRequest: (token, rejectData) =>
+    rejectFriendRequest(token, rejectData),
 };
