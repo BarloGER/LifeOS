@@ -4,7 +4,6 @@ import {
   getUser,
   editUser,
   deleteUser,
-  getUserByUsername,
 } from "../features/authentication";
 
 import {
@@ -15,6 +14,7 @@ import {
   deleteShoppingList,
 } from "../features/shopping-lists";
 import {
+  getFriendByUsername,
   acceptFriendRequest,
   rejectFriendRequest,
   sendFriendRequest,
@@ -27,7 +27,6 @@ export const api = {
   getUser: (token) => getUser(token),
   editUser: (token, updatedData) => editUser(token, updatedData),
   deleteUser: (token) => deleteUser(token),
-  getUserByUsername: (token, username) => getUserByUsername(token, username),
 
   // Shopping List methods
   createShoppingList: (token, newShoppingList) =>
@@ -41,6 +40,8 @@ export const api = {
     deleteShoppingList(token, shoppingListID),
 
   // Friend-methods
+  getFriendByUsername: (token, username) =>
+    getFriendByUsername(token, username),
   acceptFriendRequest: (token, acceptData) =>
     acceptFriendRequest(token, acceptData),
   rejectFriendRequest: (token, rejectData) =>
