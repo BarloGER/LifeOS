@@ -20,6 +20,12 @@ const shoppingListSchema = new Schema(
     name: { type: String, required: true },
     items: [itemSchema],
     sharedWith: [friendSchema],
+    isLocked: { type: Boolean, default: false, required: true },
+    lockedBy: {
+      userID: { type: String, default: "" },
+      username: { type: String, default: "" },
+    },
+    lockExpiresAt: { type: Date, default: null, required: false },
   },
   { timestamps: true },
 );
