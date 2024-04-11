@@ -109,20 +109,3 @@ export const deleteUser = asyncHandler(async (req, res, next) => {
 
   res.status(200).json({ message: "User erfolgreich gelöscht." });
 });
-
-export const getUserByUsername = asyncHandler(async (req, res, next) => {
-  const { username } = req.body;
-
-  const user = await User.findOne({ username }).select("_id username");
-  if (!user) {
-    throw new ErrorResponse({
-      message: "Benutzer existiert nicht.",
-      statusCode: 404,
-      statusMessage: "Not Found",
-      errorType: "NotFoundError",
-      errorCode: "USER_NOTFOUND_002",
-    });
-  }
-
-  res.status(200).json(user);
-});
