@@ -148,6 +148,13 @@
   width: 100%;
 }
 
+.shopping-list-details-container .footer-buttons .loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+}
+
 .shopping-list-details-container .footer-buttons a {
   font-size: 5rem;
   background-color: var(--warning-color);

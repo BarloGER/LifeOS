@@ -33,8 +33,8 @@ const messageSchema = new Schema(
 
 const userSchema = new Schema(
   {
-    username: { type: String, required: true, unique: true },
-    email: { type: String, required: true, unique: true },
+    username: { type: String, required: true, unique: true, index: true },
+    email: { type: String, required: true, unique: true, index: true },
     passwordObj: passwordObjSchema,
     lastLogin: { type: Date, default: Date.now },
     friends: [friendSchema],
@@ -42,5 +42,8 @@ const userSchema = new Schema(
   },
   { timestamps: true },
 );
+
+userSchema.index({ username: 1 });
+userSchema.index({ email: 1 });
 
 export default model("User", userSchema);

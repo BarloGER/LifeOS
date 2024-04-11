@@ -2,6 +2,27 @@ import Joi from "joi";
 
 const validFeatureTypes = ["ShoppingList"];
 
+export const getLockStatusSchema = Joi.object({
+  params: Joi.object({
+    featureID: Joi.string().alphanum().length(24).required().messages({
+      "string.length": "Die Feature-ID muss genau 24 Zeichen lang sein.",
+      "any.required": "Die Feature-ID ist erforderlich.",
+    }),
+  }),
+  body: Joi.object({
+    featureType: Joi.string()
+      .valid(...validFeatureTypes)
+      .required()
+      .messages({
+        "string.empty": "Der Feature-Typ muss angegeben werden.",
+        "any.required": "Der Feature-Typ ist erforderlich.",
+        "any.only": "Der angegebene Feature-Typ ist ungültig.",
+      }),
+  }),
+}).messages({
+  "object.unknown": "Sie haben ein unbekanntes Feld eingegeben.",
+});
+
 export const sendHeartbeatSchema = Joi.object({
   params: Joi.object({
     featureID: Joi.string().alphanum().length(24).required().messages({

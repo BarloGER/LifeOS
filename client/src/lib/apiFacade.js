@@ -5,7 +5,12 @@ import {
   editUser,
   deleteUser,
 } from "../features/authentication";
-
+import {
+  getLockStatus,
+  sendHeartbeat,
+  lockFeatureEdit,
+  unlockFeatureEdit,
+} from "../features/heartbeat";
 import {
   createShoppingList,
   getAllShoppingLists,
@@ -27,6 +32,16 @@ export const api = {
   getUser: (token) => getUser(token),
   editUser: (token, updatedData) => editUser(token, updatedData),
   deleteUser: (token) => deleteUser(token),
+
+  // Heartbeat-methods
+  getLockStatus: (token, featureID, featureData) =>
+    getLockStatus(token, featureID, featureData),
+  sendHeartbeat: (token, featureID, featureData) =>
+    sendHeartbeat(token, featureID, featureData),
+  lockFeatureEdit: (token, featureID, featureData) =>
+    lockFeatureEdit(token, featureID, featureData),
+  unlockFeatureEdit: (token, featureID, featureData) =>
+    unlockFeatureEdit(token, featureID, featureData),
 
   // Shopping List methods
   createShoppingList: (token, newShoppingList) =>

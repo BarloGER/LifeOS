@@ -6,6 +6,9 @@ import { Message } from "../../../components/ui/Message";
 import { FriendShareList } from "../../friendship-system";
 import { MdClose, MdArrowBack } from "react-icons/md";
 import "../assets/shopping-list-detail-view.css";
+import { LoadingSpinner } from "../../../components/ui/LoadingSpinner";
+
+// ToDo: Add LoadingSpinner to speichern, abbrechen, MDClose
 
 export const ShoppingListDetailView = ({
   user,
@@ -24,6 +27,10 @@ export const ShoppingListDetailView = ({
   isEditing,
   setIsEditing,
   handleEditClick,
+  stopHeartbeat,
+  unlockEdit,
+  isLoading,
+  setIsLoading,
 }) => {
   const [openShare, setOpenShare] = useState(false);
 
@@ -63,16 +70,20 @@ export const ShoppingListDetailView = ({
     }));
   };
 
+  const handleEditCancel = async () => {
+    setIsLoading(true);
+    await unlockEdit();
+    stopHeartbeat();
+    setIsEditing(false);
+    setIsLoading(false);
+    setOpenShare(false);
+  };
+
   return isEditing ? (
     <section className="edit-shopping-list-details-container">
       <div className="edit-shopping-list-details">
         <div className="close-button">
-          <MdClose
-            onClick={() => {
-              setIsEditing(false);
-              setOpenShare(false);
-            }}
-          />
+          <MdClose onClick={() => handleEditCancel()} />
         </div>
         <div className="edit-list-heading">
           <h3>Einkaufslisten Name</h3>
@@ -138,7 +149,7 @@ export const ShoppingListDetailView = ({
 
         <div className="form-action-btns">
           <button onClick={() => saveListChanges()}>Speichern</button>
-          <button onClick={() => setIsEditing(false)}>Abbrechen</button>
+          <button onClick={() => handleEditCancel()}>Abbrechen</button>
           <button onClick={() => setOpenShare(!openShare)}>
             {openShare ? "Schließen" : "Teilen"}
           </button>
@@ -208,7 +219,9 @@ export const ShoppingListDetailView = ({
             <Link to="/auth/shopping-lists">
               <MdArrowBack />
             </Link>
-            <button onClick={() => handleEditClick()}>Bearbeiten</button>
+            <button className="loading" onClick={() => handleEditClick()}>
+              Bearbeiten {isLoading && <LoadingSpinner />}
+            </button>
             <ImBin2 className="bin" onClick={() => setDeletionRequest(true)} />
           </div>
         </div>
@@ -234,4 +247,8 @@ ShoppingListDetailView.propTypes = {
   isEditing: PropTypes.bool.isRequired,
   setIsEditing: PropTypes.func.isRequired,
   handleEditClick: PropTypes.func.isRequired,
+  stopHeartbeat: PropTypes.func.isRequired,
+  unlockEdit: PropTypes.func.isRequired,
+  isLoading: PropTypes.bool.isRequired,
+  setIsLoading: PropTypes.func.isRequired,
 };
