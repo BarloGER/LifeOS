@@ -14,7 +14,7 @@ export const ShoppingListDetails = ({ user }) => {
   const [errorMessage, setErrorMessage] = useState("");
   const [deletionRequest, setDeletionRequest] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const heartbeatActiveRef = useRef(false);
   const heartbeatIntervalIdRef = useRef(null);
   const [editableList, setEditableList] = useState({
