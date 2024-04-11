@@ -6,10 +6,13 @@ const itemSchema = new Schema({
   unit: { type: String, required: true },
 });
 
-const friendSchema = new Schema({
-  friendID: { type: String, required: true, index: true },
-  friendUsername: { type: String, required: true },
-});
+const friendSchema = new Schema(
+  {
+    friendID: { type: String, required: true, index: true },
+    friendUsername: { type: String, required: true },
+  },
+  { _id: false },
+);
 
 const shoppingListSchema = new Schema(
   {
