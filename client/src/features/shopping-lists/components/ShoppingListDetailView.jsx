@@ -1,9 +1,10 @@
 import PropTypes from "prop-types";
+import { Link } from "react-router-dom";
 import { useState } from "react";
 import { ImBin2 } from "react-icons/im";
 import { Message } from "../../../components/ui/Message";
 import { FriendShareList } from "../../friendship-system";
-import { MdClose } from "react-icons/md";
+import { MdClose, MdArrowBack } from "react-icons/md";
 import "../assets/shopping-list-detail-view.css";
 
 export const ShoppingListDetailView = ({
@@ -202,9 +203,14 @@ export const ShoppingListDetailView = ({
             errorMessage={errorMessage}
             setErrorMessage={setErrorMessage}
           />
-          <button onClick={() => handleEditClick()}>Bearbeiten</button>
 
-          <ImBin2 className="bin" onClick={() => setDeletionRequest(true)} />
+          <div className="footer-buttons">
+            <Link to="/auth/shopping-lists">
+              <MdArrowBack />
+            </Link>
+            <button onClick={() => handleEditClick()}>Bearbeiten</button>
+            <ImBin2 className="bin" onClick={() => setDeletionRequest(true)} />
+          </div>
         </div>
       )}
     </section>

@@ -100,11 +100,16 @@ export const ShoppingListDetails = ({ user }) => {
   };
 
   const saveListChanges = async () => {
+    const listToSend = {
+      ...editableList,
+      items: editableList.items.map(({ completed, ...item }) => item), // eslint-disable-line no-unused-vars
+    };
+    console.log(editableList);
     try {
       const data = await api.editShoppingList(
         token,
         shoppingListID,
-        editableList
+        listToSend
       );
       if (data.message) {
         setSuccessMessage(data.message);
