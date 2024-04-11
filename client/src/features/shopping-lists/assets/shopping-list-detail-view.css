@@ -141,10 +141,25 @@
   width: 20rem;
 }
 
+.shopping-list-details-container .footer-buttons {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.shopping-list-details-container .footer-buttons a {
+  font-size: 5rem;
+  background-color: var(--warning-color);
+  border-radius: 0;
+  height: 5rem;
+  width: 5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .shopping-list-details-container .footer .bin {
-  position: absolute;
-  right: 0;
-  bottom: 0;
   background-color: var(--error-color);
   height: 5rem;
   width: 5rem;
