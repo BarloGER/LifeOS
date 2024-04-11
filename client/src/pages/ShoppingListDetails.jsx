@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { api } from "../lib/apiFacade.js";
 import { ShoppingListDetailView } from "../features/shopping-lists";
@@ -14,6 +14,9 @@ export const ShoppingListDetails = ({ user }) => {
   const [errorMessage, setErrorMessage] = useState("");
   const [deletionRequest, setDeletionRequest] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const heartbeatActiveRef = useRef(false);
+  const heartbeatIntervalIdRef = useRef(null);
   const [editableList, setEditableList] = useState({
     name: "",
     items: [{ name: "", quantity: "", unit: "" }],
@@ -45,7 +48,88 @@ export const ShoppingListDetails = ({ user }) => {
     fetchListDetails();
   }, [fetchListDetails]);
 
-  if (!shoppingListDetails) return <LoadingScreen />;
+  const startHeartbeat = () => {
+    const featureData = {
+      featureType: "ShoppingList",
+    };
+
+    if (heartbeatActiveRef.current) {
+      console.log("Heartbeat is already running.");
+      return;
+    }
+
+    heartbeatActiveRef.current = true;
+    heartbeatIntervalIdRef.current = setInterval(async () => {
+      if (!heartbeatActiveRef.current) {
+        console.log("Heartbeat has been stopped, stopping interval.");
+        clearInterval(heartbeatIntervalIdRef.current);
+        return;
+      }
+
+      try {
+        const data = await api.sendHeartbeat(
+          token,
+          shoppingListID,
+          featureData
+        );
+        console.log("Heartbeat sent:", data);
+      } catch (error) {
+        console.error("Error updating the lock:", error.message);
+        stopHeartbeat();
+      }
+    }, 60000);
+  };
+
+  const stopHeartbeat = useCallback(() => {
+    if (heartbeatIntervalIdRef.current) {
+      clearInterval(heartbeatIntervalIdRef.current);
+      heartbeatIntervalIdRef.current = null;
+      heartbeatActiveRef.current = false;
+      console.log("Heartbeat stopped.");
+    }
+  }, []);
+
+  const lockEdit = async () => {
+    const featureData = {
+      featureType: "ShoppingList",
+      username: user.username,
+    };
+
+    try {
+      const data = await api.lockFeatureEdit(
+        token,
+        shoppingListID,
+        featureData
+      );
+      if (data.message) {
+        console.log("Feature locked");
+      }
+    } catch (error) {
+      console.error("Fehler beim setzen der Sperre: ", error.message);
+      stopHeartbeat();
+    }
+  };
+
+  const unlockEdit = useCallback(async () => {
+    const featureData = {
+      featureType: "ShoppingList",
+    };
+
+    try {
+      const data = await api.unlockFeatureEdit(
+        token,
+        shoppingListID,
+        featureData
+      );
+      if (data.message) {
+        console.log("Feature unlocked");
+        stopHeartbeat();
+      }
+    } catch (error) {
+      console.error("Fehler beim Entsperren: ", error.message);
+      stopHeartbeat();
+    }
+  }, [token, shoppingListID, stopHeartbeat]);
 
   const toggleItemCompletion = (id) => {
     setShoppingListDetails((prevDetails) => {
@@ -76,6 +160,7 @@ export const ShoppingListDetails = ({ user }) => {
       if (data.message) {
         setSuccessMessage(data.message);
         setDeletionRequest(false);
+        stopHeartbeat();
         setTimeout(() => {
           navigate("/auth/shopping-lists");
         }, 1000);
@@ -86,20 +171,49 @@ export const ShoppingListDetails = ({ user }) => {
   };
 
   const handleEditClick = async () => {
-    if (shoppingListDetails) {
-      setEditableList({
-        name: shoppingListDetails.name,
-        items: shoppingListDetails.items.map((item) => ({ ...item })),
-        sharedWith: shoppingListDetails.sharedWith.map((friend) => ({
-          ...friend,
-        })),
-      });
-      setIsEditing(true);
+    setIsLoading(true);
+
+    const featureData = {
+      featureType: "ShoppingList",
+    };
+
+    try {
+      const lockStatus = await api.getLockStatus(
+        token,
+        shoppingListID,
+        featureData
+      );
+      if (lockStatus.isLocked && lockStatus.lockedBy !== user.username) {
+        setIsLoading(false);
+        setErrorMessage(
+          `Das Feature wird derzeit von ${lockStatus.lockedBy} bearbeitet.`
+        );
+        return;
+      }
+
+      // Wenn nicht gesperrt, sperren und Bearbeitung fortsetzen
+      await lockEdit();
+      if (shoppingListDetails) {
+        setEditableList({
+          name: shoppingListDetails.name,
+          items: shoppingListDetails.items.map((item) => ({ ...item })),
+          sharedWith: shoppingListDetails.sharedWith.map((friend) => ({
+            ...friend,
+          })),
+        });
+        setIsEditing(true);
+        startHeartbeat();
+      }
+      await fetchListDetails();
+    } catch (error) {
+      console.error("Fehler beim Überprüfen der Sperre: ", error.message);
+    } finally {
+      setIsLoading(false);
     }
-    await fetchListDetails();
   };
 
   const saveListChanges = async () => {
+    setIsLoading(true);
     const listToSend = {
       ...editableList,
       items: editableList.items.map(({ completed, ...item }) => item), // eslint-disable-line no-unused-vars
@@ -114,12 +228,47 @@ export const ShoppingListDetails = ({ user }) => {
       if (data.message) {
         setSuccessMessage(data.message);
         setIsEditing(false);
+        stopHeartbeat();
+        unlockEdit();
+        setIsLoading(false);
         await fetchListDetails();
       }
     } catch (error) {
       setErrorMessage(error.message);
     }
   };
+
+  useEffect(() => {
+    let inactivityTimer;
+
+    const resetInactivityTimer = () => {
+      clearTimeout(inactivityTimer);
+      inactivityTimer = setTimeout(() => {
+        if (isEditing) {
+          console.log(
+            "Inaktivität erkannt. Versuche, das Feature freizugeben und den Heartbeat zu stoppen."
+          );
+          unlockEdit();
+          stopHeartbeat();
+        }
+      }, 300000);
+    };
+
+    window.addEventListener("mousemove", resetInactivityTimer);
+    window.addEventListener("keypress", resetInactivityTimer);
+    window.addEventListener("touchmove", resetInactivityTimer);
+    window.addEventListener("scroll", resetInactivityTimer);
+
+    return () => {
+      clearTimeout(inactivityTimer);
+      window.removeEventListener("mousemove", resetInactivityTimer);
+      window.removeEventListener("keypress", resetInactivityTimer);
+      window.removeEventListener("touchmove", resetInactivityTimer);
+      window.removeEventListener("scroll", resetInactivityTimer);
+    };
+  }, [isEditing, stopHeartbeat, unlockEdit]);
+
+  if (!shoppingListDetails) return <LoadingScreen />;
 
   return (
     <ShoppingListDetailView
@@ -139,6 +288,10 @@ export const ShoppingListDetails = ({ user }) => {
       isEditing={isEditing}
       setIsEditing={setIsEditing}
       handleEditClick={handleEditClick}
+      stopHeartbeat={stopHeartbeat}
+      unlockEdit={unlockEdit}
+      isLoading={isLoading}
+      setIsLoading={setIsLoading}
     />
   );
 };
