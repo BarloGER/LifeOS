@@ -99,13 +99,14 @@ export const editShoppingListSchema = Joi.object({
     items: Joi.array()
       .items(
         Joi.object({
-          name: Joi.string().messages({
+          _id: Joi.string().alphanum().optional(),
+          name: Joi.string().required().messages({
             "string.empty": "Der Artikelname muss angegeben werden",
           }),
-          quantity: Joi.string().messages({
+          quantity: Joi.string().required().messages({
             "string.empty": "Die Menge muss angegeben werden",
           }),
-          unit: Joi.string().messages({
+          unit: Joi.string().required().messages({
             "string.empty": "Die Einheit muss angegeben werden",
           }),
         }),
