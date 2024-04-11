@@ -8,7 +8,7 @@ import {
   MdOutlineCheck,
   MdKeyboardDoubleArrowUp,
 } from "react-icons/md";
-import { MessageCenter } from "../../features/message-center";
+import { MessageCenter } from "../../pages/MessageCenter";
 
 export const NavBarUI = ({ toggleHamburger, isClicked, user, setUser }) => {
   return (
