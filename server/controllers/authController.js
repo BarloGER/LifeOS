@@ -9,9 +9,7 @@ const expTime = process.env.EXPIRATION_TIME;
 const saltRounds = 10;
 
 export const signUp = asyncHandler(async (req, res, next) => {
-  const {
-    body: { username, email, password, ...rest },
-  } = req;
+  const { username, email, password, ...rest } = req.body;
 
   const usernameAlreadyExists = await User.findOne({ username });
   if (usernameAlreadyExists) {
@@ -55,9 +53,7 @@ export const signUp = asyncHandler(async (req, res, next) => {
 });
 
 export const signIn = asyncHandler(async (req, res, next) => {
-  const {
-    body: { email, password },
-  } = req;
+  const { email, password } = req.body;
 
   const user = await User.findOne({ email });
   if (!user) {
