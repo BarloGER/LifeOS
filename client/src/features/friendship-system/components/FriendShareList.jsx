@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import "../../assets/friend-share-list.css";
+import "../assets/friend-share-list.css";
 
 // ToDo: Verhindern dass Nicht befreundete Personen, aus der Liste verschwinden, wenn die checkbox angeklickt wird.
 

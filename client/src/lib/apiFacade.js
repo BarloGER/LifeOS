@@ -11,16 +11,14 @@ import {
   createShoppingList,
   getAllShoppingLists,
   getSingleShoppingList,
-} from "../features/shopping-lists";
-import {
-  deleteShoppingList,
   editShoppingList,
-} from "../features/shopping-lists/services/shoppingListFetches";
+  deleteShoppingList,
+} from "../features/shopping-lists";
 import {
   acceptFriendRequest,
   rejectFriendRequest,
   sendFriendRequest,
-} from "../features/message-center";
+} from "../features/friendship-system";
 
 export const api = {
   // User-methods
