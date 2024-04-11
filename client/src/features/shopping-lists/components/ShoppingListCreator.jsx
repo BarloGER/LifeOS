@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import { FriendShareList } from "../../../components/ui/FriendShareList";
+import { FriendShareList } from "../../friendship-system/components/FriendShareList";
 import { Message } from "../../../components/ui/Message";
 import "../assets/shopping-list-creator.css";
 
@@ -49,7 +49,12 @@ export const ShoppingListCreator = ({
   return (
     <section className="new-list-container">
       <div className="close-button">
-        <MdClose onClick={() => setShowNewList(false)} />
+        <MdClose
+          onClick={() => {
+            setShowNewList(false);
+            setOpenShare(false);
+          }}
+        />
       </div>
       <div className="new-list-heading">
         <h3>Einkaufslisten Name</h3>
@@ -114,7 +119,9 @@ export const ShoppingListCreator = ({
       <div className="form-action-btns">
         <button onClick={() => createNewShoppingList()}>Speichern</button>
         <button onClick={() => cancelShoppingListEdit()}>Abbrechen</button>
-        <button onClick={() => setOpenShare(!openShare)}>Teilen mit</button>
+        <button onClick={() => setOpenShare(!openShare)}>
+          {openShare ? "Schließen" : "Teilen"}
+        </button>
       </div>
       <FriendShareList
         openShare={openShare}

@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 import { useState, useEffect, useCallback, useMemo } from "react";
-import { ShoppingListsCollection } from "../features/shopping-lists/components/ShoppingListsCollection";
+import { ShoppingListsCollection } from "../features/shopping-lists";
 import { api } from "../lib/apiFacade";
 
 export const ShoppingLists = ({ user }) => {

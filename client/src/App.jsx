@@ -15,7 +15,7 @@ import { SignUp } from "./pages/SignUp";
 import { Dashboard } from "./pages/Dashboard";
 import { UserProfile } from "./pages/UserProfile";
 import { ShoppingLists } from "./pages/ShoppingLists";
-import { ShoppingListDetails } from "./features/shopping-lists/components/ShoppingListDetails";
+import { ShoppingListDetails } from "./pages/ShoppingListDetails";
 
 export const App = () => {
   const {
