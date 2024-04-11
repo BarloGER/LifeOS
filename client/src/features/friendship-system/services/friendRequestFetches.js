@@ -1,5 +1,27 @@
 import { apiFetch } from "../../../lib/fetch";
 
+export const getFriendByUsername = async (token, username) => {
+  const response = await apiFetch(
+    `/auth/friend`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(username),
+    },
+    token
+  );
+
+  if (response.error) {
+    throw new Error(
+      response.error.message || "Es ist ein unbekannter Fehler aufgetreten."
+    );
+  }
+
+  return response.data;
+};
+
 export const acceptFriendRequest = async (token, acceptData) => {
   const response = await apiFetch(
     `/auth/friend/accept-request`,
@@ -46,7 +68,7 @@ export const rejectFriendRequest = async (token, rejectData) => {
 
 export const sendFriendRequest = async (token, friendData) => {
   const response = await apiFetch(
-    `/auth/friend`,
+    `/auth/friend/send-request`,
     {
       method: "POST",
       headers: {

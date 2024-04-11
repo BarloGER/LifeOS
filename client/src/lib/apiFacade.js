@@ -4,23 +4,21 @@ import {
   getUser,
   editUser,
   deleteUser,
-  getUserByUsername,
 } from "../features/authentication";
 
 import {
   createShoppingList,
   getAllShoppingLists,
   getSingleShoppingList,
+  editShoppingList,
+  deleteShoppingList,
 } from "../features/shopping-lists";
 import {
-  deleteShoppingList,
-  editShoppingList,
-} from "../features/shopping-lists/services/shoppingListFetches";
-import {
+  getFriendByUsername,
   acceptFriendRequest,
   rejectFriendRequest,
   sendFriendRequest,
-} from "../features/message-center";
+} from "../features/friendship-system";
 
 export const api = {
   // User-methods
@@ -29,7 +27,6 @@ export const api = {
   getUser: (token) => getUser(token),
   editUser: (token, updatedData) => editUser(token, updatedData),
   deleteUser: (token) => deleteUser(token),
-  getUserByUsername: (token, username) => getUserByUsername(token, username),
 
   // Shopping List methods
   createShoppingList: (token, newShoppingList) =>
@@ -43,6 +40,8 @@ export const api = {
     deleteShoppingList(token, shoppingListID),
 
   // Friend-methods
+  getFriendByUsername: (token, username) =>
+    getFriendByUsername(token, username),
   acceptFriendRequest: (token, acceptData) =>
     acceptFriendRequest(token, acceptData),
   rejectFriendRequest: (token, rejectData) =>

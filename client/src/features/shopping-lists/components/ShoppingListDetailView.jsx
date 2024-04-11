@@ -1,94 +1,30 @@
 import PropTypes from "prop-types";
-import { useEffect, useState, useCallback } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import { api } from "../../../lib/apiFacade";
-import { LoadingScreen } from "../../../components/ui/LoadingSceen";
-import "../assets/shopping-list-details.css";
+import { useState } from "react";
 import { ImBin2 } from "react-icons/im";
 import { Message } from "../../../components/ui/Message";
-import { FriendShareList } from "../../../components/ui/FriendShareList";
+import { FriendShareList } from "../../friendship-system";
 import { MdClose } from "react-icons/md";
+import "../assets/shopping-list-detail-view.css";
 
-export const ShoppingListDetails = ({ user }) => {
-  const { shoppingListID } = useParams();
-  const [shoppingListDetails, setShoppingListDetails] = useState(null);
-  const [successMessage, setSuccessMessage] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
-  const [isEditing, setIsEditing] = useState(false);
+export const ShoppingListDetailView = ({
+  user,
+  shoppingListDetails,
+  editableList,
+  setEditableList,
+  toggleItemCompletion,
+  deleteShoppingList,
+  saveListChanges,
+  successMessage,
+  setSuccessMessage,
+  errorMessage,
+  setErrorMessage,
+  deletionRequest,
+  setDeletionRequest,
+  isEditing,
+  setIsEditing,
+  handleEditClick,
+}) => {
   const [openShare, setOpenShare] = useState(false);
-  const [deletionRequest, setDeletionRequest] = useState(false);
-  const [editableList, setEditableList] = useState({
-    name: "",
-    items: [{ name: "", quantity: "", unit: "" }],
-    sharedWith: [],
-  });
-  const navigate = useNavigate();
-  const token = localStorage.getItem("token");
-
-  const fetchListDetails = useCallback(async () => {
-    try {
-      const response = await api.getSingleShoppingList(token, shoppingListID);
-      if (response && response.shoppingList) {
-        const storedListStatus = JSON.parse(
-          localStorage.getItem(`shoppingListID: ${shoppingListID}`) || "{}"
-        );
-        const updatedItems = response.shoppingList.items.map((item) => ({
-          ...item,
-          completed: !!storedListStatus[item._id],
-        }));
-        setShoppingListDetails({
-          ...response.shoppingList,
-          items: updatedItems,
-        });
-      }
-    } catch (error) {
-      setErrorMessage(error.message);
-    }
-  }, [token, shoppingListID]);
-
-  useEffect(() => {
-    fetchListDetails();
-  }, [fetchListDetails]);
-
-  if (!shoppingListDetails) return <LoadingScreen />;
-
-  const deleteShoppingList = async () => {
-    try {
-      const data = await api.deleteShoppingList(token, shoppingListID);
-      if (data.message) {
-        setSuccessMessage(data.message);
-        setDeletionRequest(false);
-        setTimeout(() => {
-          navigate("/auth/shopping-lists");
-        }, 1000);
-      }
-    } catch (error) {
-      setErrorMessage(error.message);
-    }
-  };
-
-  const toggleItemCompletion = (id) => {
-    setShoppingListDetails((prevDetails) => {
-      const updatedItems = prevDetails.items.map((item) => {
-        if (item._id === id) {
-          return { ...item, completed: !item.completed };
-        }
-        return item;
-      });
-
-      const updatedStatus = updatedItems.reduce((acc, item) => {
-        acc[item._id] = item.completed;
-        return acc;
-      }, {});
-
-      localStorage.setItem(
-        `shoppingListID: ${shoppingListID}`,
-        JSON.stringify(updatedStatus)
-      );
-
-      return { ...prevDetails, items: updatedItems };
-    });
-  };
 
   const handleChangeListName = (e) => {
     setEditableList((prevList) => ({
@@ -126,28 +62,16 @@ export const ShoppingListDetails = ({ user }) => {
     }));
   };
 
-  const saveListChanges = async () => {
-    try {
-      const data = await api.editShoppingList(
-        token,
-        shoppingListID,
-        editableList
-      );
-      if (data.message) {
-        setSuccessMessage(data.message);
-        setIsEditing(false);
-        await fetchListDetails();
-      }
-    } catch (error) {
-      setErrorMessage(error.message);
-    }
-  };
-
   return isEditing ? (
     <section className="edit-shopping-list-details-container">
       <div className="edit-shopping-list-details">
         <div className="close-button">
-          <MdClose onClick={() => setIsEditing(false)} />
+          <MdClose
+            onClick={() => {
+              setIsEditing(false);
+              setOpenShare(false);
+            }}
+          />
         </div>
         <div className="edit-list-heading">
           <h3>Einkaufslisten Name</h3>
@@ -214,7 +138,9 @@ export const ShoppingListDetails = ({ user }) => {
         <div className="form-action-btns">
           <button onClick={() => saveListChanges()}>Speichern</button>
           <button onClick={() => setIsEditing(false)}>Abbrechen</button>
-          <button onClick={() => setOpenShare(!openShare)}>Teilen mit</button>
+          <button onClick={() => setOpenShare(!openShare)}>
+            {openShare ? "Schließen" : "Teilen"}
+          </button>
         </div>
 
         <FriendShareList
@@ -276,22 +202,7 @@ export const ShoppingListDetails = ({ user }) => {
             errorMessage={errorMessage}
             setErrorMessage={setErrorMessage}
           />
-          <button
-            onClick={() => {
-              if (shoppingListDetails) {
-                setEditableList({
-                  name: shoppingListDetails.name,
-                  items: shoppingListDetails.items.map((item) => ({ ...item })),
-                  sharedWith: shoppingListDetails.sharedWith.map((friend) => ({
-                    ...friend,
-                  })),
-                });
-                setIsEditing(true);
-              }
-            }}
-          >
-            Bearbeiten
-          </button>
+          <button onClick={() => handleEditClick()}>Bearbeiten</button>
 
           <ImBin2 className="bin" onClick={() => setDeletionRequest(true)} />
         </div>
@@ -300,6 +211,21 @@ export const ShoppingListDetails = ({ user }) => {
   );
 };
 
-ShoppingListDetails.propTypes = {
+ShoppingListDetailView.propTypes = {
   user: PropTypes.object,
+  shoppingListDetails: PropTypes.object.isRequired,
+  editableList: PropTypes.object.isRequired,
+  setEditableList: PropTypes.func.isRequired,
+  toggleItemCompletion: PropTypes.func.isRequired,
+  deleteShoppingList: PropTypes.func.isRequired,
+  saveListChanges: PropTypes.func.isRequired,
+  successMessage: PropTypes.string.isRequired,
+  setSuccessMessage: PropTypes.func.isRequired,
+  errorMessage: PropTypes.string.isRequired,
+  setErrorMessage: PropTypes.func.isRequired,
+  deletionRequest: PropTypes.bool.isRequired,
+  setDeletionRequest: PropTypes.func.isRequired,
+  isEditing: PropTypes.bool.isRequired,
+  setIsEditing: PropTypes.func.isRequired,
+  handleEditClick: PropTypes.func.isRequired,
 };

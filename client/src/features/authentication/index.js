@@ -9,4 +9,3 @@ export { signIn } from "./services/userFetches";
 export { getUser } from "./services/userFetches";
 export { editUser } from "./services/userFetches";
 export { deleteUser } from "./services/userFetches";
-export { getUserByUsername } from "./services/userFetches";

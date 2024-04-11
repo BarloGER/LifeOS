@@ -4,6 +4,23 @@ import User from "../models/User.js";
 
 // ToDO: Mehrere Freunde löschen
 
+export const getFriendByUsername = asyncHandler(async (req, res, next) => {
+  const { username } = req.body;
+
+  const user = await User.findOne({ username }).select("_id username");
+  if (!user) {
+    throw new ErrorResponse({
+      message: "Benutzer existiert nicht.",
+      statusCode: 404,
+      statusMessage: "Not Found",
+      errorType: "NotFoundError",
+      errorCode: "USER_NOTFOUND_002",
+    });
+  }
+
+  res.status(200).json(user);
+});
+
 export const sendFriendRequest = asyncHandler(async (req, res, next) => {
   const { userID } = req;
   const { username, friendID, friendUsername } = req.body;

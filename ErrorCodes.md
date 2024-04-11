@@ -24,6 +24,14 @@
 - **SHOPPING_LIST_PERMISSION_001**: Du kannst nur Einkaufslisten editieren, die du erstellt hast, oder zu denen du eingeladen wurdest.
 - **SHOPPING_LIST_PERMISSION_002**: Du kannst nur Listen löschen, die du erstellt hast.
 
+### RESOURCE (`HEARTBEAT`)
+
+- **HEARTBEAT_NOTFOUND_001**: Diese ${featureName(featureType)} existiert nicht.
+- **HEARTBEAT_NOTFOUND_002**: Feature existiert nicht!
+- **HEARTBEAT_CONFLICT_001**: Das Feature wird derzeit von ${feature.lockedBy.username} bearbeitet.
+- **HEARTBEAT_CONFLICT_002**: Die ${featureName(featureType)} ist bereits von ${feature.lockedBy.username} gesperrt.
+- **HEARTBEAT_CONFLICT_003**: Die ${featureName(featureType)} ist nicht mehr gesperrt.
+
 ### Systemfehler (`SYS`)
 
 - **SYS_ERROR_001**: Interner Serverfehler.

@@ -80,7 +80,7 @@ export const UserProfile = ({ user, setUser, setIsAuthenticated }) => {
     };
 
     try {
-      const friend = await api.getUserByUsername(token, friendUsernameToObj);
+      const friend = await api.getFriendByUsername(token, friendUsernameToObj);
       if (!friend) {
         setErrorMessage(friend.message);
         return;

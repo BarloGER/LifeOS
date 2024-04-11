@@ -4,19 +4,6 @@ import ShoppingList from "../models/ShoppingList.js";
 
 // ToDo: Sicherstellen, dass sharedWith nur genutzt werden kann ,wenn der User auch wirklich ein Freund ist.
 
-export const createShoppingList = asyncHandler(async (req, res, next) => {
-  const { ownerID, name, items, sharedWith } = req.body;
-
-  await ShoppingList.create({
-    ownerID,
-    name,
-    items,
-    sharedWith,
-  });
-
-  res.status(201).json({ message: "Einkaufsliste erfolgreich erstellt." });
-});
-
 export const getAllShoppingLists = asyncHandler(async (req, res, next) => {
   const { userID } = req;
 
@@ -28,6 +15,19 @@ export const getAllShoppingLists = asyncHandler(async (req, res, next) => {
     shoppingLists,
     message: "Vorhandene Einkaufslisten erfolgreich abgefragt.",
   });
+});
+
+export const createShoppingList = asyncHandler(async (req, res, next) => {
+  const { ownerID, name, items, sharedWith } = req.body;
+
+  await ShoppingList.create({
+    ownerID,
+    name,
+    items,
+    sharedWith,
+  });
+
+  res.status(201).json({ message: "Einkaufsliste erfolgreich erstellt." });
 });
 
 export const getSingleShoppingList = asyncHandler(async (req, res, next) => {
@@ -69,7 +69,7 @@ export const editShoppingList = asyncHandler(async (req, res, next) => {
   if (
     !(
       userID === shoppingList.ownerID ||
-      shoppingList.sharedWith.friendID.includes(userID)
+      shoppingList.sharedWith.some((friend) => friend.friendID === userID)
     )
   ) {
     throw new ErrorResponse({
@@ -86,11 +86,14 @@ export const editShoppingList = asyncHandler(async (req, res, next) => {
     shoppingList.name = name;
   }
 
-  if (items && items !== shoppingList.items) {
+  if (items && JSON.stringify(items) !== JSON.stringify(shoppingList.items)) {
     shoppingList.items = items;
   }
 
-  if (sharedWith && sharedWith !== shoppingList.sharedWith) {
+  if (
+    sharedWith &&
+    JSON.stringify(sharedWith) !== JSON.stringify(shoppingList.sharedWith)
+  ) {
     shoppingList.sharedWith = sharedWith;
   }
 
