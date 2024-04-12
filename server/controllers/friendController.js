@@ -35,6 +35,15 @@ export const sendFriendRequest = asyncHandler(async (req, res, next) => {
     });
   }
 
+  if (username === friendUsername) {
+    throw new ErrorResponse({
+      message: "Du kannst dich nicht selbst als Freund hinzufügen.",
+      statusCode: 409,
+      errorType: "ConflictError",
+      errorCode: "FRIEND_CONFLICT_001",
+    });
+  }
+
   // Check if users are already friends
   const isAlreadyFriend = user.friends.some(
     (friend) => friend.friendID === friendID,
