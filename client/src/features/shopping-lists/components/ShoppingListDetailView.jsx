@@ -199,11 +199,20 @@ export const ShoppingListDetailView = ({
         </table>
       </div>
       {deletionRequest ? (
-        <div className="deletion-request">
-          <button className="deletion" onClick={() => deleteShoppingList()}>
-            Löschen
-          </button>
-          <button onClick={() => setDeletionRequest(false)}>Abbrechen</button>
+        <div className="footer">
+          <Message
+            className="message"
+            successMessage={successMessage}
+            setSuccessMessage={setSuccessMessage}
+            errorMessage={errorMessage}
+            setErrorMessage={setErrorMessage}
+          />
+          <div className="deletion-request">
+            <button className="deletion" onClick={() => deleteShoppingList()}>
+              Löschen
+            </button>
+            <button onClick={() => setDeletionRequest(false)}>Abbrechen</button>
+          </div>
         </div>
       ) : (
         <div className="footer">
