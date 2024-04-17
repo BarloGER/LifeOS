@@ -9,6 +9,12 @@ export const useAuth = () => {
 
   useEffect(() => {
     const validateToken = async () => {
+      if (!token) {
+        setIsAuthenticated(false);
+        setUser(null);
+        return;
+      }
+
       try {
         setLoadingAuthRequest(true);
         const data = await api.getUser(token);
@@ -20,12 +26,15 @@ export const useAuth = () => {
         if (errorStatus === 401 || errorStatus === 403) {
           localStorage.removeItem("token");
           setToken(null);
+          setIsAuthenticated(false);
+          setUser(null);
         }
       } finally {
         setLoadingAuthRequest(false);
       }
     };
-    token && validateToken();
+
+    validateToken();
   }, [token]);
 
   return {

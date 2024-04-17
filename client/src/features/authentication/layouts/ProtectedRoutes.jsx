@@ -3,15 +3,16 @@ import { useEffect } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import { LoadingScreen } from "../../../components/ui/LoadingSceen";
 
+// ToDo: Add Loading Screen
+
 export const ProtectedRoutes = ({ isAuthenticated }) => {
   const navigate = useNavigate();
-  const token = localStorage.getItem("token");
 
   useEffect(() => {
-    if (!token) {
+    if (!isAuthenticated) {
       navigate("/");
     }
-  }, [token, navigate]);
+  }, [isAuthenticated, navigate]);
 
   return isAuthenticated ? <Outlet /> : <LoadingScreen />;
 };
