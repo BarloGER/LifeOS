@@ -214,11 +214,17 @@ export const ShoppingListDetails = ({ user }) => {
 
   const saveListChanges = async () => {
     setIsLoading(true);
+
+    const filteredItems = editableList.items
+      .map(({ completed, ...item }) => ({ ...item })) // eslint-disable-line no-unused-vars
+      .filter(
+        (item) => item.name.trim() || item.quantity.trim() || item.unit.trim()
+      ); // Filter out empty items
+
     const listToSend = {
       ...editableList,
-      items: editableList.items.map(({ completed, ...item }) => item), // eslint-disable-line no-unused-vars
+      items: filteredItems,
     };
-    console.log(editableList);
     try {
       const data = await api.editShoppingList(
         token,
